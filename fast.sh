@@ -22,7 +22,7 @@ function install_vim(){
 
 function install_nginx(){
   yum -y install pcre pcre-devel openssl-devel openssl gcc gcc-c++
-  mkdir /root/srv/ && cd /root/srv/
+  mkdir /root/srv/ ; cd /root/srv/
   wget http://www.rice666.com:8888/nginx-1.16.1.tar.gz
   useradd -s /sbin/nologin -M nginx
   tar -xf nginx-1.16.1.tar.gz
@@ -72,7 +72,7 @@ fi
 
 function install_php7(){
   yum install -y gcc gcc-c++  make zlib zlib-devel pcre pcre-devel  libjpeg libjpeg-devel libpng libpng-devel freetype freetype-devel libxml2 libxml2-devel glibc glibc-devel glib2 glib2-devel bzip2 bzip2-devel ncurses ncurses-devel curl curl-devel e2fsprogs e2fsprogs-devel krb5 krb5-devel openssl openssl-devel openldap openldap-devel nss_ldap openldap-clients openldap-servers libxslt libxslt-devel
-  mkdir /root/srv/ && cd /root/srv
+  mkdir /root/srv/ ; cd /root/srv
   wget https://www.php.net/distributions/php-7.2.19.tar.gz
   tar -xf php-7.2.19.tar.gz
   cd php-7.2.19/
@@ -102,7 +102,7 @@ function install_zabbix(){
   read -p "请再次输入数据库密码:" mysql_passwd2
 if [ $mysql_pass == $mysql_pass2  ];then
   yum -y install net-snmp-devel curl-devel libevent-devel
-  mkdir /root/srv &&  cd /root/srv/
+  mkdir /root/srv ;  cd /root/srv/
   wget https://cdn.zabbix.com/zabbix/sources/stable/5.2/zabbix-5.2.0.tar.gz
   tar -xf zabbix-5.2.0.tar.gz
   cd /root/srv/zabbix-5.2.0

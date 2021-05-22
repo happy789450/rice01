@@ -1,0 +1,9 @@
+nginx定义403  要在 server里面加上 error_page  403 /403.html;
+nginx 将403 ip 返回在403界面 要在location里面加上
+        location  /403.html {
+                default_type text/html;
+                add_header Content-Type 'text/html; charset=utf-8';
+                return 200   "<html> <head><title>403 Forbidden</title></head> <body> <center><h1>403 Forbidden</h1></center> <center><h1>powered by rice</h1></center> <hr><center>client_ip:$remote_addr</center> </body> </html>";
+        #        allow   all;
+                        }
+然后重载nginx即可

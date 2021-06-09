@@ -235,7 +235,7 @@ elif [ "$choice" = 6 ];then
 elif [ "$choice" = 7 ];then
   install_redis
 elif [ "$choice" = 8 ];then
-  install_zabbix-agent
+  install_zabbix_agent
 elif [ "$choice" = 9 ];then
   install_rabbitmq
 elif [ "$choice" = 10 ];then

@@ -124,7 +124,7 @@ EOF
   chown -R nginx:nginx /usr/local/nginx/html
   useradd zabbix
   sed -i '118c DBPassword=zabbix' /usr/local/zabbix/etc/zabbix_server.conf
-  sed -i '133c DBPord=3306' /usr/local/zabbix/etc/zabbix_server.conf
+  sed -i '133c DBPort=3306' /usr/local/zabbix/etc/zabbix_server.conf
   cd /root/srv
   wget http://www.rice666.com:8888/systemctl/zabbix-server.service
   wget http://www.rice666.com:8888/systemctl/zabbix-agent.service
@@ -149,6 +149,7 @@ function install_zabbix_agent(){
   ./configure --prefix=/usr/local/zabbix --enable-agent --with-mysql --enable-ipv6 --with-net-snmp --with-libcurl --with-libxml2
   make && make install
   useradd zabbix
+  cd /srv/
   wget http://www.rice666.com:8888/systemctl/zabbix-server.service
   wget http://www.rice666.com:8888/systemctl/zabbix-agent.service
   cp /srv/zabbix-agent.service /usr/lib/systemd/system/zabbix-agent.service

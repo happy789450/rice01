@@ -142,18 +142,16 @@ fi
 
 function install_zabbix_agent(){
   yum -y install net-snmp-devel curl-devel libevent-devel
-  mkdir /root/srv/
-  cd /root/srv/
-  wget https://cdn.zabbix.com/zabbix/sources/stable/5.2/zabbix-5.2.0.tar.gz
-  tar -xf zabbix-5.2.0.tar.gz
-  cd /root/srv/zabbix-5.2.0
+  cd /srv/
+  wget https://cdn.zabbix.com/zabbix/sources/stable/4.0/zabbix-4.0.31.tar.gz
+  tar -xf zabbix-4.0.31.tar.gz
+  cd /srv/zabbix-4.0.31
   ./configure --prefix=/usr/local/zabbix --enable-agent --with-mysql --enable-ipv6 --with-net-snmp --with-libcurl --with-libxml2
-  cd /root/srv/zabbix-5.2.0/
   make && make install
   useradd zabbix
   wget http://www.rice666.com:8888/systemctl/zabbix-server.service
   wget http://www.rice666.com:8888/systemctl/zabbix-agent.service
-  cp /root/srv/zabbix-agent.service /usr/lib/systemd/system/zabbix-agent.service
+  cp /srv/zabbix-agent.service /usr/lib/systemd/system/zabbix-agent.service
   systemctl daemon-reload
   systemctl start zabbix-agent && systemctl status zabbix-agent
 }

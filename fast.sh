@@ -2,7 +2,7 @@
 #执行就对了
 read -p "请选择要做的事
 1，初始化（安装vim等）					10,安装测试网速软件	
-2，安装nginx
+2，安装nginx						11,安装jenkins
 3，安装mysql5.7
 4, 安装php7.2
 5, 安装zabbix
@@ -204,6 +204,15 @@ function install_speedtest(){
     echo "直接执行speedtest即可测试网速"
 }
 
+function install_jenkins(){
+    cd /srv/
+    wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+    rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+    yum -y install jenkins  java-1.8.0-openjdk
+    systemctl start jenkins && systemctl enable jenkins &&systemctl enable jenkins
+    echo "默认端口号8080,可以通过nginx代理访问"
+}
+
 function readme(){
   echo "本脚本尽量只执行一次，如果失败可以自行调整，少数服务可以多次执行无影响
         脚本有待完善
@@ -241,6 +250,8 @@ elif [ "$choice" = 9 ];then
   install_rabbitmq
 elif [ "$choice" = 10 ];then
   install_speedtest
+elif [ "$choice" = 11 ];then
+  install_jenkins
 elif [ "$choice" = 0 ];then
   readme
 else

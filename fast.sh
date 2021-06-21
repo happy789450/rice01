@@ -225,7 +225,7 @@ function install_shadowsocks(){
     mkdir /etc/shadowsocks
     cp shadowsocks.json  /etc/shadowsocks/shadowsocks.json
     cp shadowsocks.service  /usr/lib/systemd/system/ 
-    sed -i "5c  \ \ \"$shadow_port\":\"shadow_$pass\"" /etc/shadowsocks/shadowsocks.json
+    sed -i "5c  \ \ \"$shadow_port\":\"$shadow_pass\"" /etc/shadowsocks/shadowsocks.json
     systemctl daemon-reload 
     systemctl start shadowsocks && systemctl enable shadowsocks &&systemctl shadowsocks jenkins 
     

@@ -220,9 +220,13 @@ function install_shadowsocks(){
     yum -y install python3
     pip3 install shadowsocks
     cd /srv/
-    wget 
-    #systemctl daemon reload 
-    #systemctl start shadowsocks && systemctl enable shadowsocks &&systemctl shadowsocks jenkins 
+    wget https://raw.githubusercontent.com/happy789450/rice01/main/systemctl/shadowsocks.service 
+    wget https://raw.githubusercontent.com/happy789450/rice01/main/conf/shadowsocks.json
+    cp shadowsocks.json  /etc/shadowsocks/shadowsocks.json
+    cp shadowsocks.service  /usr/lib/systemd/system/ 
+    sed -i "5c  \ \ \"$shadow_port\":\"shadow_$pass\"" /etc/shadowsocks/shadowsocks.json
+    systemctl daemon-reload 
+    systemctl start shadowsocks && systemctl enable shadowsocks &&systemctl shadowsocks jenkins 
     
 }
 

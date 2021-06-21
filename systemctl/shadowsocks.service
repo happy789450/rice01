@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 Type=forking
-ExecStart=/usr/bin/ssserver -c /etc/shadowsocks/shadowsocks.json -d start
+ExecStart=/usr/local/bin/ssserver -c /etc/shadowsocks/shadowsocks.json -d start
 PrivateTmp=true
 
 [Install]

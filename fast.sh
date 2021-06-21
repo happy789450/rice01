@@ -3,7 +3,7 @@
 read -p "请选择要做的事
 1，初始化（安装vim等）					10,安装测试网速软件	
 2，安装nginx						11,安装jenkins
-3，安装mysql5.7
+3，安装mysql5.7						12,安装shadowsocks
 4, 安装php7.2
 5, 安装zabbix
 6，一键安装nginx,mysql,php,zabbix
@@ -209,8 +209,21 @@ function install_jenkins(){
     wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
     rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
     yum -y install jenkins  java-1.8.0-openjdk
-    systemctl start jenkins && systemctl enable jenkins &&systemctl enable jenkins
+    systemctl start jenkins && systemctl enable jenkins &&systemctl status jenkins
+    wget https://raw.githubusercontent.com/happy789450/rice01/main/conf/jenkins.conf
     echo "默认端口号8080,可以通过nginx代理访问"
+}
+
+function install_shadowsocks(){
+    read -p "请输入密码:" shadow_pass
+    read -p "请选择端口号:" shadow_port
+    yum -y install python3
+    pip3 install shadowsocks
+    cd /srv/
+    wget 
+    #systemctl daemon reload 
+    #systemctl start shadowsocks && systemctl enable shadowsocks &&systemctl shadowsocks jenkins 
+    
 }
 
 function readme(){
@@ -252,6 +265,8 @@ elif [ "$choice" = 10 ];then
   install_speedtest
 elif [ "$choice" = 11 ];then
   install_jenkins
+elif [ "$choice" = 12 ];then
+  install_shadowsocks
 elif [ "$choice" = 0 ];then
   readme
 else

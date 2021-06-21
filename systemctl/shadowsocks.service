@@ -1,0 +1,11 @@
+[Unit]
+Description=shadowsocks-server
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/ssserver -c /etc/shadowsocks/shadowsocks.json -d start
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

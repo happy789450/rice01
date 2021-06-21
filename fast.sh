@@ -222,6 +222,7 @@ function install_shadowsocks(){
     cd /srv/
     wget https://raw.githubusercontent.com/happy789450/rice01/main/systemctl/shadowsocks.service 
     wget https://raw.githubusercontent.com/happy789450/rice01/main/conf/shadowsocks.json
+    mkdir /etc/shadowsocks
     cp shadowsocks.json  /etc/shadowsocks/shadowsocks.json
     cp shadowsocks.service  /usr/lib/systemd/system/ 
     sed -i "5c  \ \ \"$shadow_port\":\"shadow_$pass\"" /etc/shadowsocks/shadowsocks.json

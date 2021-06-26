@@ -1,0 +1,7 @@
+编辑/etc/my.cnf下的MySQL的配置文件，加上下面内容
+[mysqld]
+......
+slow_query_log=1
+slow_query_log_file=/var/log/mysql/slow_query.log
+long_query_time=0.01
+

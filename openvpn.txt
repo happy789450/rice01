@@ -1,0 +1,8 @@
+服务端：
+git clone https://github.com/Nyr/openvpn-install.git
+然后执行脚本即可生成client文件
+
+客户端
+windos版
+https://openvpn.net/downloads/openvpn-connect-v3-windows.msi
+下载完了安装，把client文件上传即可

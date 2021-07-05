@@ -1,0 +1,4 @@
+
+
+#certbot 使用命令，安装后使用，然后下一步即可
+certbot --nginx  --nginx-server-root=/usr/local/nginx/conf

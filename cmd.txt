@@ -1,6 +1,7 @@
 常用命令
 
 docker system prune				清理docker 缓存
+docker logs -f  --tail 100 xxx			docker 最后100行 日志
 
 git config  credential.helper store   	        git 免密/保存密码push
 

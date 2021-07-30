@@ -27,7 +27,7 @@ function install_nginx(){
   useradd -s /sbin/nologin -M nginx
   tar -xf nginx-1.16.1.tar.gz
   cd /root/srv/nginx-1.16.1
-  ./configure --prefix=/usr/local/nginx --user=nginx --group=nginx  --with-http_stub_status_module --with-http_ssl_module
+  ./configure --prefix=/usr/local/nginx --user=nginx --group=nginx  --with-http_stub_status_module --with-http_ssl_module --with-stream
   make && make install 
   ln -s /usr/local/nginx/sbin/nginx /bin/nginx
   echo nginx is ok > /usr/local/nginx/html/index.html

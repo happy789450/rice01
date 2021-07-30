@@ -5,5 +5,8 @@ docker logs -f  --tail 100 xxx			docker 最后100行 日志
 
 git config  credential.helper store   	        git 免密/保存密码push
 
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '123456';	mysql(5.7) 允许远程登录
+						
+
 openssl x509 -in  $crt   -noout -dates 		查看证书时间
 openssl x509 -text -in $crt -noout|grep DNS	查看证书域名

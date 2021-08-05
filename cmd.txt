@@ -10,3 +10,5 @@ GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '123456';	mysql(5.7) 允
 
 openssl x509 -in  $crt   -noout -dates 		查看证书时间
 openssl x509 -text -in $crt -noout|grep DNS	查看证书域名
+
+ssh root@10.4.45.47 -o stricthostkeychecking=no # 首次登陆免输yes登录

@@ -3,6 +3,9 @@
 docker system prune				清理docker 缓存
 docker logs -f  --tail 100 xxx			docker 最后100行 日志
 
+find /root  -maxdepth 1 -type f   		find 查找一层目录
+find  -maxdepth 1 -type f -empty |xargs rm -f	find 删除一层目录下的空文件
+
 git config  credential.helper store   	        git 免密/保存密码push
 
 GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '123456';	mysql(5.7) 允许远程登录

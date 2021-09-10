@@ -4,7 +4,7 @@ read -p "请选择要做的事
 1，初始化（安装vim等）					10,安装测试网速软件	
 2，安装nginx						11,安装jenkins
 3，安装mysql5.7						12,安装shadowsocks
-4, 安装php7.2						13,安�node,npm
+4, 安装php7.2						13,安装node,npm
 5, 安装zabbix
 6，一键安装nginx,mysql,php,zabbix
 7, 安装redis

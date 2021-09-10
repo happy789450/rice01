@@ -4,7 +4,7 @@ read -p "请选择要做的事
 1，初始化（安装vim等）					10,安装测试网速软件	
 2，安装nginx						11,安装jenkins
 3，安装mysql5.7						12,安装shadowsocks
-4, 安装php7.2
+4, 安装php7.2						13,安�node,npm
 5, 安装zabbix
 6，一键安装nginx,mysql,php,zabbix
 7, 安装redis
@@ -231,6 +231,17 @@ function install_shadowsocks(){
     
 }
 
+function install_node(){
+    cd /srv/
+    wget https://nodejs.org/dist/v14.17.6/node-v14.17.6-linux-x64.tar.xz
+    tar -xf node-v14.17.6-linux-x64.tar.xz
+    mv  node-v14.17.6-linux-x64   /usr/local/nodejs
+    ln -s /usr/local/nodejs/bin/node /usr/bin/node
+    ln -s /usr/local/nodejs/bin/npm /usr/bin/npm
+    ln -s /usr/local/nodejs/bin/npx /usr/bin/npx
+    node -v && npm -v && npx -v 
+}
+
 function readme(){
   echo "本脚本尽量只执行一次，如果失败可以自行调整，少数服务可以多次执行无影响
         脚本有待完善
@@ -272,6 +283,8 @@ elif [ "$choice" = 11 ];then
   install_jenkins
 elif [ "$choice" = 12 ];then
   install_shadowsocks
+elif [ "$choice" = 13 ];then
+  install_node
 elif [ "$choice" = 0 ];then
   readme
 else

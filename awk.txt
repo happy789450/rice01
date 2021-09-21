@@ -10,3 +10,13 @@ awk '{for (i=1; i<=10;i++)printf("%s ", $i);print "" }'
 
 awk 数字求和
 cat 1.txt  |awk '{sum+=$i}END{print sum}'
+
+cat a.txt		## a.txt内容如下，要统计第二列数据各自的值 命令如下
+3 a
+4 a
+2 b
+9 b
+awk '{sum[$2]+=$1}END {for (i in sum){print sum[i],i}}' a.txt
+7 a
+11 b
+

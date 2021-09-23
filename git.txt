@@ -4,7 +4,7 @@ git fetch --all
 git pull --all
 
 
-如果只是简单的将 A 分支的文件f.txt copy到 B 分支上；   
+如果只是简单的将 A 分支的文件f.txt copy到 B 分支上；  该操作对目录同样适用 
 git checkout B			# 切到B分支
 cd path/to/f.txt		# 到需要的目录
 git checkout A_bracn  f.txt	# 将A分支文件 cp 到 B 分支 

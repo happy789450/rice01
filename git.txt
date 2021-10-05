@@ -11,3 +11,34 @@ git checkout A_bracn  f.txt	# 将A分支文件 cp 到 B 分支
 git add .
 git commit -m "xx"
 git push
+
+
+git lfs 的使用
+github默认项目的大小是50M
+如果项目文件过大，可以使用 git lfs来将大文件保存至另外的仓库
+
+1 安装
+cd /srv/
+wget https://github.com/git-lfs/git-lfs/releases/download/v3.0.1/git-lfs-linux-amd64-v3.0.1.tar.gz
+tar -xf git-lfs-linux-amd64-v3.0.1.tar.gz
+bash install.sh
+
+2 进入git项目
+eg:
+cd /usr/local/nginx/html/game/
+git lfs install   #开启lfs功能
+使用 git lfs track 命令进行大文件追踪 eg:
+git lfs track "*.png" 
+追踪所有后缀为png的文件
+
+添加追踪文件
+git add .gitattributes
+
+3 正常推送文件
+git add . 
+git commit -m "xx"
+git push 
+
+4 拉取代码
+拉取代码也需要 git lfs 环境 没有需要执行 第1，第2 两个步骤
+git lfs pull

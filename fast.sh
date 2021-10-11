@@ -5,7 +5,7 @@ read -p "请选择要做的事
 2，安装nginx						11,安装jenkins
 3，安装mysql5.7						12,安装shadowsocks
 4, 安装php7.2						13,安装node,npm
-5, 安装zabbix
+5, 安装zabbix						14,安装gitlab
 6，一键安装nginx,mysql,php,zabbix
 7, 安装redis
 8, 安装zabbix-agent
@@ -242,6 +242,15 @@ function install_node(){
     node -v && npm -v && npx -v 
 }
 
+
+function install_gitlab(){
+    curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.rpm.sh | sudo bash
+    yum -y install gitlab-ee
+    echo "安装完毕，需要修改配置文件/etc/gitlab/gitlab.rb
+          然后执行  gitlab-ctl reconfigure  才能访问"
+
+}
+
 function readme(){
   echo "本脚本尽量只执行一次，如果失败可以自行调整，少数服务可以多次执行无影响
         脚本有待完善
@@ -285,6 +294,8 @@ elif [ "$choice" = 12 ];then
   install_shadowsocks
 elif [ "$choice" = 13 ];then
   install_node
+elif [ "$choice" = 14 ];then
+  install_gitlab
 elif [ "$choice" = 0 ];then
   readme
 else

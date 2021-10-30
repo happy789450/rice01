@@ -3,6 +3,8 @@
 docker system prune				清理docker 缓存
 docker logs -f  --tail 100 xxx			docker 最后100行 日志
 
+echo -e "\u8bbf\u95ee\u5730\u5740\u4e0d\u5b58\u5728\uff01"	通过echo -e 将Unicode编码转为中文
+
 find /root  -maxdepth 1 -type f   		find 查找一层目录
 find  -maxdepth 1 -type f -empty |xargs rm -f	find 删除一层目录下的空文件
 
@@ -18,4 +20,5 @@ ps -ef | grep 006 | grep cos |grep -v cosfs  |awk '{print $2}' |xargs  kill -9
 						批量杀死进程
 
 ssh root@10.4.45.47 -o stricthostkeychecking=no # 首次登陆免输yes登录
+
 

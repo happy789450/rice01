@@ -6,7 +6,7 @@ read -p "请选择要做的事
 3，安装mysql5.7						12,安装shadowsocks
 4, 安装php7.2						13,安装node,npm
 5, 安装zabbix						14,安装gitlab
-6，一键安装nginx,mysql,php,zabbix
+6，一键安装nginx,mysql,php,zabbix			15,安装openresty+openstar
 7, 安装redis
 8, 安装zabbix-agent
 9, 安装rabbitmq				
@@ -251,6 +251,24 @@ function install_gitlab(){
 
 }
 
+function install_openresty(){
+    cd /srv/
+    wget https://openresty.org/download/openresty-1.19.9.1.tar.gz
+    tar -xf openresty-1.19.9.1.tar.gz
+    cd openresty-1.19.9.1
+    ./configure --prefix=/opt/openresty --with-luajit
+    make && make install
+    chown nobody:nobody -R /opt/openresty
+    cd /opt/openresty
+    wget -O openstar.zip https://codeload.github.com/starjun/openstar/zip/master
+    unzip -o openstar.zip
+    mv -f openstar-master openstar
+    chown nobody:nobody -R openstar
+    echo "已经安装openresty 和 openstar 但是并未启动"
+    
+
+}
+
 function readme(){
   echo "本脚本尽量只执行一次，如果失败可以自行调整，少数服务可以多次执行无影响
         脚本有待完善
@@ -296,6 +314,8 @@ elif [ "$choice" = 13 ];then
   install_node
 elif [ "$choice" = 14 ];then
   install_gitlab
+elif [ "$choice" = 15 ];then
+  install_openresty+openstar
 elif [ "$choice" = 0 ];then
   readme
 else

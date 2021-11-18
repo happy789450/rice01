@@ -251,7 +251,7 @@ function install_gitlab(){
 
 }
 
-function install_openresty(){
+function install_openresty+openstar(){
     cd /srv/
     wget https://openresty.org/download/openresty-1.19.9.1.tar.gz
     tar -xf openresty-1.19.9.1.tar.gz

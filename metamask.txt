@@ -1,0 +1,12 @@
+1.fee
+2.stool
+3.speed
+4.engine
+5.tell
+6.student
+7.vintage
+8.peanut
+9.spice
+10.endorse
+11.cook
+12.grape

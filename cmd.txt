@@ -21,4 +21,10 @@ ps -ef | grep 006 | grep cos |grep -v cosfs  |awk '{print $2}' |xargs  kill -9
 
 ssh root@10.4.45.47 -o stricthostkeychecking=no # 首次登陆免输yes登录
 
-
+centos7  时间同步
+#安装ntpdate
+yum -y install ntpdate
+#同步时间
+ntpdate -u  pool.ntp.org
+#同步完成后,date命令查看时间是否正确
+date

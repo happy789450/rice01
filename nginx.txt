@@ -7,3 +7,10 @@ nginx 将403 ip 返回在403界面 要在location里面加上
         #        allow   all;
                         }
 然后重载nginx即可
+
+
+ngixn 优化
+1.屏蔽nginx版本号
+在http 字段添加
+server_tokens off;
+然后重载nginx即可

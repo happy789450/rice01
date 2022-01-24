@@ -216,7 +216,8 @@ function install_shadowsocks(){
     read -p "请输入密码:" shadow_pass
     read -p "请选择端口号:" shadow_port
     yum -y install python3
-    pip3 install shadowsocks
+    pip3 install https://github.com/shadowsocks/shadowsocks/archive/master.zip -U
+    #pip3 install shadowsocks
     cd /srv/
     wget https://raw.githubusercontent.com/happy789450/rice01/main/systemctl/shadowsocks.service 
     wget https://raw.githubusercontent.com/happy789450/rice01/main/conf/shadowsocks.json

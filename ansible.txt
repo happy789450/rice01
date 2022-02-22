@@ -1,0 +1,20 @@
+1.安装ansible  所有机器执行
+yum install epel-release -y
+yum install ansible –y
+
+2.修改管理机器的配置文件
+vim /etc/ansible/hosts
+...
+[test]  #客户端的组名
+10.4.20.17
+10.4.20.18  #客户端ip
+
+3.配置免密登录
+#1.生成私钥
+[root@server ~]# ssh-keygen 
+#2.向客户端分发私钥
+[root@server ~]# ssh-copy-id root@10.4.20.17
+[root@server ~]# ssh-copy-id root@10.4.20.18
+
+4.测试链接
+ansible test -m ping   #输出正常则说明没有问题

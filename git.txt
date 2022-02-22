@@ -42,3 +42,16 @@ git push
 4 拉取代码
 拉取代码也需要 git lfs 环境 没有需要执行 第1，第2 两个步骤
 git lfs pull
+
+
+github   git clone 指定秘钥的方法
+1.先用 ssh-keygen 生成秘钥文件
+ssh-keygen -t rsa -f git
+
+2.然后把生成的公钥上传到github
+
+3.执行下面的命令 ssh-add命令是把专用密钥添加到ssh-agent的高速缓存中,从而提高ssh的认证速度
+ssh-add /path/to/xxx.pem
+如果报错 则执行   ssh-agent bash 然后再执行上面一行的命令
+
+4.git clone 代码

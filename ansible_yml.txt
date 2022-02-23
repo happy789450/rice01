@@ -1,0 +1,33 @@
+---
+- hosts: test
+#  remote_user: root
+  tasks:
+
+#    - name: "创建文件夹"
+#      file:
+#        path: "/root/git"
+#        state: directory
+#        owner: root
+#        group: root
+#        mode: 0755
+
+#    - name: "yum install git"
+#      yum:
+#        name: git
+#        state: latest
+
+#    - name: "yum install vim"
+#      yum:
+#        name: vim
+#        state: latest
+
+#    - name: "git clone"
+#      git:
+#        repo: 'git@github.com:happy789450/123.git'
+#        dest: /root/1
+     
+#     - name:  "用shell执行yum安装"
+#       shell: yum -y install sl net-tools  wget
+      
+#      - name: "执行交互试脚本"
+#        shell: echo "1" | bash /root/git/rice01/fast.sh

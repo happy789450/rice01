@@ -29,3 +29,9 @@ kubeadm init --kubernetes-version=1.18.0  \
 --apiserver-advertise-address=192.168.122.21   \
 --image-repository registry.aliyuncs.com/google_containers  \
 --service-cidr=10.10.0.0/16 --pod-network-cidr=10.122.0.0/16
+
+
+在master主机上查看node节点机器:
+[root@ct7-1 ~]# kubectl get nodes 
+NAME         STATUS    AGE
+10.4.20.16   Ready     17h

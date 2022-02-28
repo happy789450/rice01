@@ -30,8 +30,35 @@ kubeadm init --kubernetes-version=1.18.0  \
 --image-repository registry.aliyuncs.com/google_containers  \
 --service-cidr=10.10.0.0/16 --pod-network-cidr=10.122.0.0/16
 
+###k8s 常用命令
+k8s 还原命令
+kubeadm reset
 
 在master主机上查看node节点机器:
 [root@ct7-1 ~]# kubectl get nodes 
-NAME         STATUS    AGE
-10.4.20.16   Ready     17h
+NAME    STATUS   ROLES                  AGE    VERSION
+ct7-1   Ready    control-plane,master   3d3h   v1.23.4
+ct7-2   Ready    <none>                 3d     v1.23.4
+ct7-4   Ready    <none>                 3d     v1.23.4
+
+查看pods
+[root@ct7-1 ~]# kubectl get pods -n kube-system
+NAME                            READY   STATUS    RESTARTS        AGE
+coredns-6d8c4cb4d-jklwl         1/1     Running   1 (6h21m ago)   3d3h
+coredns-6d8c4cb4d-m5k4n         1/1     Running   1 (6h21m ago)   3d3h
+etcd-ct7-1                      1/1     Running   1 (6h21m ago)   3d3h
+kube-apiserver-ct7-1            1/1     Running   1 (6h21m ago)   3d3h
+kube-controller-manager-ct7-1   1/1     Running   1 (6h21m ago)   3d3h
+kube-flannel-ds-8gddc           1/1     Running   1 (6h20m ago)   3d
+kube-flannel-ds-g86t4           1/1     Running   1 (6h21m ago)   3d
+kube-flannel-ds-x9s7d           1/1     Running   1 (6h21m ago)   3d2h
+kube-proxy-hnp5k                1/1     Running   1 (6h20m ago)   3d
+kube-proxy-m4jgc                1/1     Running   1 (6h21m ago)   3d3h
+kube-proxy-r8jzm                1/1     Running   1 (6h21m ago)   3d
+kube-scheduler-ct7-1            1/1     Running   1 (6h21m ago)   3d3h
+
+查看服务
+[root@ct7-1 ~]# kubectl get svc -o wide
+NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)        AGE    SELECTOR
+kubernetes   ClusterIP   10.1.0.1     <none>        443/TCP        3d3h   <none>
+nginx        NodePort    10.1.183.2   <none>        80:30342/TCP   3d     app=nginx

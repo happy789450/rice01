@@ -55,3 +55,10 @@ ssh-add /path/to/xxx.pem
 如果报错 则执行   ssh-agent bash 然后再执行上面一行的命令
 
 4.git clone 代码
+
+
+#git 代码回滚到指定commit
+通过  git log 可以查看commit id
+git reset --hard commit_id    退到/进到 指定commit_id
+
+git reflog 可以查看操作记录 

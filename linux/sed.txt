@@ -1,0 +1,1 @@
+sed -n '/swap/ s/^/#/p' /etc/fstab    #匹配关键字  然后注释该行

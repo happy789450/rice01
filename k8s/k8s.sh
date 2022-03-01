@@ -1,9 +1,19 @@
 #!/bin/bash
 
-master_ip="10.4.20.19"
+hostname=$(hostname)
+master_ip=$(ifconfig |awk 'NR==2{print $2}')
+
+#关闭防火墙
+systemctl stop firewalld 
+systemctl disable firewalld 
 
 #关闭swap分区
 swapoff -a
+
+#永久关闭swap
+sed -i '/swap/ s/^/#/g' /etc/fstab
+
+echo -e  "$master_ip  \t$hostname"  >> /etc/hosts
 
 
 #配置内核参数，将桥接的IPv4流量传递到iptables的链
@@ -12,6 +22,18 @@ net.bridge.bridge-nf-call-ip6tables = 1
 net.bridge.bridge-nf-call-iptables = 1
 EOF
 sysctl --system
+
+#安装docker
+wget https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo -O/etc/yum.repos.d/docker-ce.repo
+yum -y install docker-ce-18.06.1.ce-3.el7
+
+#更改docker的启动参数
+sed -i  's/ExecStart=\/usr\/bin\/dockerd /ExecStart=\/usr\/bin\/dockerd --exec-opt native.cgroupdriver=systemd/g'  /usr/lib/systemd/system/docker.service
+
+systemctl daemon-reload
+systemctl restart docker
+
+
 
 #添加阿里kubernetes源
 cat <<EOF > /etc/yum.repos.d/kubernetes.repo
@@ -24,7 +46,7 @@ repo_gpgcheck=1
 gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
 EOF
 
-yum -y  install kubectl kubelet kubeadm
+yum -y  install kubectl kubelet kubeadm --nogpgcheck
 systemctl enable kubelet
 
 #这里不用启动kubelet  会报错

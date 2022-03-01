@@ -1,7 +1,7 @@
 #!/bin/bash
 
 hostname=$(hostname)
-master_ip=$(ifconfig |awk 'NR==2{print $2}')
+node_ip=$(ifconfig |awk 'NR==2{print $2}')
 
 #关闭防火墙
 systemctl stop firewalld 
@@ -13,7 +13,7 @@ swapoff -a
 #永久关闭swap
 sed -i '/swap/ s/^/#/g' /etc/fstab
 
-echo -e  "$master_ip  \t$hostname"  >> /etc/hosts
+echo -e  "$node_ip  \t$hostname"  >> /etc/hosts
 
 
 #配置内核参数，将桥接的IPv4流量传递到iptables的链
@@ -53,18 +53,18 @@ systemctl enable kubelet
 #提前拉取镜像  不然初始化的时候会等很久 也有可能失败
 kubeadm config images pull
 
-#初始化k8s集群
-kubeadm init \
---apiserver-advertise-address=$master_ip \
---image-repository registry.aliyuncs.com/google_containers \
---kubernetes-version v1.23.4 \
---service-cidr=10.1.0.0/16 \
---pod-network-cidr=10.244.0.0/16
-
-#配置kubectl 工具
-mkdir -p $HOME/.kube
-cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-chown $(id -u):$(id -g) $HOME/.kube/config
+##初始化k8s集群
+#kubeadm init \
+#--apiserver-advertise-address=$master_ip \
+#--image-repository registry.aliyuncs.com/google_containers \
+#--kubernetes-version v1.23.4 \
+#--service-cidr=10.1.0.0/16 \
+#--pod-network-cidr=10.244.0.0/16
+#
+##配置kubectl 工具
+#mkdir -p $HOME/.kube
+#cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+#chown $(id -u):$(id -g) $HOME/.kube/config
 
 #安装pod网络插件
 kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml

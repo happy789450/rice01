@@ -32,6 +32,7 @@ sed -i  's/ExecStart=\/usr\/bin\/dockerd/ExecStart=\/usr\/bin\/dockerd --exec-op
 
 systemctl daemon-reload
 systemctl restart docker
+systemctl enable docker 
 
 
 

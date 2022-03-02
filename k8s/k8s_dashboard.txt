@@ -1,0 +1,24 @@
+在k8s集群完成后可以安装 图像界面
+master执行
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.0/aio/deploy/recommended.yaml
+
+然后执行
+kubectl proxy
+输出 Starting to serve on 127.0.0.1:8001 则执行成功
+
+使用nginx做反向代理  配置文件里面要 自己生成证书 或者使用域名 买证书 
+nginx 配置文件参考  k8s_dashboard.conf
+
+
+创建账户  获取token
+#创建账户
+kubectl create serviceaccount dashboard-admin -n kubernetes-dashboard
+#授权
+kubectl create clusterrolebinding dashboard-admin-rb --clusterrole=cluster-admin --serviceaccount=kubernetes-dashboard:dashboard-admin
+
+#获取账号token
+kubectl get secrets -n kubernetes-dashboard |grep dashboard-admin
+#这里会显示dashboard 名字 下面的命令替换即可
+kubectl describe secrets dashboard-admin-token-xxxx -n kubernetes-dashboard
+
+#输出的 token 复制粘贴到 登录页面 即可

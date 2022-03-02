@@ -28,3 +28,7 @@ yum -y install ntpdate
 ntpdate -u  pool.ntp.org
 #同步完成后,date命令查看时间是否正确
 date
+
+
+##centos服务器如何用命令查看哪个程序内存占用情况
+ps aux|head -1; ps aux | sort -k4nr | head -10  

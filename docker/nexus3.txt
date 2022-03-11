@@ -1,0 +1,98 @@
+docker 安装私有仓库
+环境说明首先安装好docker
+1.docker pull nexus3
+
+2.docker run -d -p 8081:8081 -p 8082:8082 —name nexus3 —restart=always —privileged=true -v /data/nexus3/:/nexus-data sonatype/nexus3
+#8081 是前端端口，图形化界面
+#8082 是后端端口 用于推送 拉取本地镜像
+
+3.docker logs nexus3
+#查看服务是否正常
+
+4.nginx反代
+###
+'''
+server {
+listen 80;
+listen 443 ssl;
+server_name 
+	web.xxx.com;  # nexus 前台
+    access_log logs/docker_access.log access;
+    error_log logs/docker_error.log;
+ssl_certificate 	key/xxx.com.crt;
+ssl_certificate_key  	key/xxx.com.key;
+#80强制跳转443
+#if ($server_port != "443") { return 301 https://$host:443$request_uri; }
+ssl_session_timeout  5m;
+ssl_ciphers HIGH:!aNULL:!MD5;
+ssl_protocols SSLv3 TLSv1 TLSv1.1 TLSv1.2;
+ssl_prefer_server_ciphers   on;
+location / {
+    proxy_pass http://127.0.0.1:8081;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto https;
+    proxy_set_header Via "nginx";
+}
+error_page   500 502 503 504  /50x.html;
+location = /50x.html {
+    root   /usr/share/nginx/html;
+}
+}
+server {
+listen 80;
+listen 443 ssl;
+server_name 
+	ck.xxx.com;  # docker 仓库
+    access_log logs/docker_admin_access.log access;
+    error_log logs/docker_admin_error.log;
+ssl_certificate 	key/xxx.com.crt;
+ssl_certificate_key  	key/xxx.com.key;
+#80强制跳转443
+if ($server_port != "443") { return 301 https://$host:443$request_uri; }
+ssl_session_timeout  5m;
+ssl_ciphers HIGH:!aNULL:!MD5;
+ssl_protocols SSLv3 TLSv1 TLSv1.1 TLSv1.2;
+ssl_prefer_server_ciphers   on;
+location / {
+    proxy_pass http://127.0.0.1:8082;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Via "nginx";
+    client_max_body_size 1024M;
+}
+error_page   500 502 503 504  /50x.html;
+location = /50x.html {
+    root   /usr/share/nginx/html;
+}
+}
+'''
+###
+
+## nexus3 默认用户 admin  默认密码
+docker exec -it 容器id bash  进入容器
+cat /opt/sonatype/sonatype-work/nexus/admin.password 
+
+nexus3  创建仓库
+登录 nexus3 前台 修改登录密码后
+点击 Blob Stores
+创建 一个存储点 选择file 文件类型
+
+点击设置--Repositories
+点击 Create repository 创建仓库 选择 docker host
+填写名字 勾选http  填写端口号8082
+
+创建角色
+
+创建用户
+注意 创建用户时 id是登录用户名  
+
+
+docker 登录仓库  推送本地 容器
+docker login -u   dt_dev  https://ck.xxx.com
+
+docker tag ac40ce625740  ck.xxx.com/项目名字/容器名字:版本号
+
+docker push dt-docker-ck.lxdjk.com/test/xxx:x.x

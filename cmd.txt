@@ -32,3 +32,7 @@ date
 
 ##centos服务器如何用命令查看哪个程序内存占用情况
 ps aux|head -1; ps aux | sort -k4nr | head -10  
+
+#centos7 yum更换 阿里源
+curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo
+

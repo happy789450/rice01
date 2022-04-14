@@ -19,7 +19,10 @@ openssl x509 -text -in $crt -noout|grep DNS	查看证书域名
 ps -ef | grep 006 | grep cos |grep -v cosfs  |awk '{print $2}' |xargs  kill -9
 						批量杀死进程
 
+##ssh系列
 ssh root@10.4.45.47 -o stricthostkeychecking=no # 首次登陆免输yes登录
+
+ssh  -T  root@10.4.20.19  < tg.sh               #ssh 远程服务器执行本地脚本 
 
 centos7  时间同步
 #安装ntpdate

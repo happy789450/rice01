@@ -39,3 +39,5 @@ ps aux|head -1; ps aux | sort -k4nr | head -10
 #centos7 yum更换 阿里源
 curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo
 
+#rsync 远程同步文件  指定端口同步文件
+rsync   -av -e "ssh -p 22" xxx/   root@192.168.1.1:/tmp/xxx/

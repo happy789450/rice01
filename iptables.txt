@@ -11,8 +11,9 @@ systemctl status iptables
 #允许指定ip访问指定端口
 iptables -I INPUT -s 1.1.1.1 -p tcp --dport 80 -j ACCEPT
 
-保存规则
-iptables-save
-
 #禁止端口
 iptables -A INPUT -p tcp --dport 80 -j DROP
+
+#保存规则
+service iptables save
+#使用该命令会直接保存到 /etc/sysconfig/iptalbes

@@ -40,20 +40,27 @@ function install_mysql(){
   read -p "请输入新的mysql密码:" new_mysql_pass
   read -p "请再次输入新的mysql密码:" new_mysql_pass2
 if [ $new_mysql_pass == $new_mysql_pass2  ];then
+  setenforce 0 
+  #临时关闭selinux
+  sed -i 's/SELINUX=enforcing/SELINUX=disable/' /etc/selinux/config
   systemctl stop mysqld mariadb
-  cd /root/srv/
+  cd /srv/
   wget http://repo.mysql.com/mysql57-community-release-el7-9.noarch.rpm
   rpm -ivh mysql57-community-release-el7-9.noarch.rpm
-  yum -y  install mysql mysql-server mysql-devel
+  #添加检查密钥
+  rpm --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2022
+  yum -y  install mysql mysql-server mysql-devel 
   rm -f /etc/my.cnf
-  cd /root/srv/
-  wget http://www.rice666.com:8888/my.cnf
-  \cp  /root/srv/my.cnf  /etc/my.cnf
+  \cp  /root/rice01/mysql/my.cnf  /etc/my.cnf
+  useradd  mysql  -M  -s /sbin/nologin
   chown mysql:mysql /etc/my.cnf
-  rm -rf /var/lib/mysql
+  rm -rf /var/lib/mysql/*
   echo ""  > /var/log/mysqld.log
   chown mysql:mysql /var/log/mysqld.log
+  mysqld --initialize --user=mysql
+  #初始化数据库
   systemctl start mysqld  && systemctl enable mysqld
+  systemctl status mysqld
   mysql_pass=$(grep "temporary password"  /var/log/mysqld.log  | awk '{print $NF}')
   mysql -uroot -p"$mysql_pass"  --connect-expired-password -e "set global validate_password_policy=0;"
   mysql -uroot -p"$mysql_pass"  --connect-expired-password -e "set global validate_password_length=1;"

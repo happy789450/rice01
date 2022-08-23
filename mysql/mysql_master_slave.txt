@@ -1,0 +1,53 @@
+#mysql 主从 配置方法
+前提
+首先得有2台数据库服务器，并且没有防火墙等限制
+1.修改2台数据库的配置文件
+在主服务器的/etc/my.cnf 加上
+server-id=1    
+#定义server 实例的id
+log-bin=mysql-bin
+#开启bin-log日志
+
+在从服务器添加
+server-id=2
+#定义实例id  要与主不同
+relay-log=mysql-relay 
+#开启从的中继日志
+
+然后重起2台服务器的mysql服务
+
+2.在主服务器上创建一个用户给从访问
+ GRANT ALL ON *.* TO ‘root’@‘192.168.1.2’ IDENTIFIED BY ‘123456’;
+#用户名 密码  可以自定义 权限可以不用这么大
+
+3.查看主的状态
+mysql>show master status ;
+#注意:记录下File 和Position的值，切记不要再操作主机MySQL，防止主机的File和Position
+值发生变化
+
+4.在从上用命令配置
+CHANGE MASTER TO MASTER_HOST=‘主机IP’,
+MASTER_USER=‘主机创建好的用户’,
+MASTER_PASSWORD=‘密码’,
+MASTER_LOG_FILE=‘File名1字’,
+MASTER_LOG_POS=Position数字;
+
+eg:
+mysql> CHANGE MASTER TO MASTER_HOST=‘192.168.1.1’,
+MASTER_USER=‘root’,
+MASTER_PASSWORD=‘123456’,
+MASTER_LOG_FILE=‘mysql-bin.000001’,
+MASTER_LOG_POS=439;
+
+5.在从上启用主从复制功能
+mysql>start slave;
+
+#在从上查看主从状态
+mysql>show slave status\G;
+#主要查看2个参数
+Slave_IO_Running: Yes
+Slave_SQL_Running: Yes
+
+#如果没有2个有一个不是yes 或者2个都不是 主从状态会有报错信息
+#可以先停止主从  重新配置
+mysql>stop slave;  #停止主从命令

@@ -9,7 +9,7 @@ systemctl start iptables && systemctl enable iptables
 systemctl status iptables 
 
 #允许指定ip访问指定端口
-iptables -I INPUT -s 1.1.1.1 -p tcp --dport 80 -j ACCEPT
+iptables -A INPUT -s 1.1.1.1 -p tcp --dport 80 -j ACCEPT
 
 #本机端口转发 如85转发到80
 iptables -t nat -A PREROUTING -p tcp --dport 85 -j REDIRECT --to-ports 80

@@ -1,0 +1,20 @@
+centos限制普通用户执行部分/指定命令
+目的是为了防止普通用户权限过大
+首先得创建一个普通用户 如test
+1.先在test用户家目录创建一个bin目录
+mkdir /home/test/bin
+
+2.然后把需要用到的命令放在test家目录bin下
+eg:
+ln -s /bin/grep   /home/test/bin
+ln -s /usr/sbin/ss  /home/test/bin
+...
+#有的命令在/bin/ 下面  有的可能在/usr/sbin/下面 可以用which查看
+
+3.修改test用户的 环境变量文件 /home/test/.bash_profile
+可以先备份
+修改内容为
+PATH=$HOME/bin
+然后保存  test 用户执行
+source .bash_profile
+

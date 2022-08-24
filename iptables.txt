@@ -23,3 +23,25 @@ service iptables save
 
 #重载规则  
 systemctl reload iptables 
+
+iptables 4表
+raw 表 有
+PREROUTING 链
+OUTPUT     链
+
+mangle 表
+PREROUTING 链
+POSTROUTING链
+INPUT      链
+OUTPUT     链
+FORWARD    链
+
+nat 表
+PREOUTING  链
+POSTROUTING链
+OUTPUT	   链
+
+filter 表
+INPUT      链
+FORWARD    链
+OUTPUT     链

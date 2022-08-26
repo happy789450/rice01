@@ -21,7 +21,7 @@ function install_vim(){
 function install_nginx(){
   yum -y install pcre pcre-devel openssl-devel openssl gcc gcc-c++
   mkdir /root/srv/ ; cd /root/srv/
-  wget http://www.rice666.com:8888/nginx-1.16.1.tar.gz
+  wget http://download.rice666.com:8888/nginx-1.16.1.tar.gz
   useradd -s /sbin/nologin -M nginx
   tar -xf nginx-1.16.1.tar.gz
   cd /root/srv/nginx-1.16.1
@@ -77,8 +77,8 @@ fi
 
 function install_php7(){
   yum install -y gcc gcc-c++  make zlib zlib-devel pcre pcre-devel  libjpeg libjpeg-devel libpng libpng-devel freetype freetype-devel libxml2 libxml2-devel glibc glibc-devel glib2 glib2-devel bzip2 bzip2-devel ncurses ncurses-devel curl curl-devel e2fsprogs e2fsprogs-devel krb5 krb5-devel openssl openssl-devel openldap openldap-devel nss_ldap openldap-clients openldap-servers libxslt libxslt-devel
-  mkdir /root/srv/ ; cd /root/srv
-  wget http://www.rice666.com:8888/php-7.2.19.tar.gz
+  cd /srv
+  wget http://download.rice666.com:8888/php-7.2.19.tar.gz
   tar -xf php-7.2.19.tar.gz
   cd php-7.2.19/
   ./configure --prefix=/usr/local/php7 --with-config-file-path=/usr/local/php7/etc --with-curl --with-mhash --with-gd --with-gettext --with-iconv-dir --with-kerberos --with-ldap --with-libdir=lib64 --with-libxml-dir --with-openssl --with-pcre-regex --with-pdo-sqlite --with-pear --with-xmlrpc --with-xsl --with-zlib --enable-fpm --enable-ldap --enable-bcmath --enable-libxml --enable-inline-optimization --enable-mbregex --enable-mbstring --enable-opcache --enable-pcntl --enable-shmop --enable-soap --enable-sockets --enable-sysvmsg --enable-sysvsem --enable-sysvshm --enable-xml --enable-zip --enable-static --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-freetype-dir --with-jpeg-dir --with-png-dir --disable-debug
@@ -94,10 +94,10 @@ function install_php7(){
   sed -i '385c max_execution_time = 300' /usr/local/php7/etc/php.ini
   sed -i '674c post_max_size = 32M'  /usr/local/php7/etc/php.ini
   sed -i '395c max_input_time = 300' /usr/local/php7/etc/php.ini
-  cd /root/srv/ 
+  cd /srv/ 
   wget http://www.rice666.com:8888/systemctl/php-fpm.service
-  cd /root/srv
-  cp /root/srv/php-fpm.service /usr/lib/systemd/system/php-fpm.service
+  cd /srv
+  cp /srv/php-fpm.service /usr/lib/systemd/system/php-fpm.service
   systemctl daemon-reload 
   systemctl start php-fpm && systemctl enable php-fpm
 }
@@ -107,38 +107,38 @@ function install_zabbix(){
   read -p "请再次输入数据库密码:" mysql_passwd2
 if [ $mysql_pass == $mysql_pass2  ];then
   yum -y install net-snmp-devel curl-devel libevent-devel
-  mkdir /root/srv ;  cd /root/srv/
+  mkdir /srv ;  cd /srv/
   wget https://cdn.zabbix.com/zabbix/sources/stable/5.2/zabbix-5.2.0.tar.gz
   tar -xf zabbix-5.2.0.tar.gz
-  cd /root/srv/zabbix-5.2.0
+  cd /srv/zabbix-5.2.0
   ./configure --prefix=/usr/local/zabbix --enable-server --enable-agent --with-mysql --enable-ipv6 --with-net-snmp --with-libcurl --with-libxml2
-  cd /root/srv/zabbix-5.2.0/
+  cd /srv/zabbix-5.2.0/
   make && make install
   mysql -uroot -p$mysql_passwd <<EOF 
 create database zabbix character set utf8 collate utf8_bin;
 grant all on zabbix.* to zabbix@"localhost" identified by "zabbix";
 EOF
-  cd /root/srv/zabbix-5.2.0/database/mysql/
+  cd /srv/zabbix-5.2.0/database/mysql/
   mysql -uzabbix -pzabbix zabbix < schema.sql
   mysql -uzabbix -pzabbix zabbix < images.sql
   mysql -uzabbix -pzabbix zabbix < data.sql
-  cp -a /root/srv/zabbix-5.2.0/ui/* /usr/local/nginx/html/
-  cd /root/srv
-  wget  http://www.rice666.com:8888/conf/simhei.ttf
-  \cp  /root/srv/simhei.ttf    /usr/local/nginx/html/zabbix/assets/fonts/DejaVuSans.ttf
+  cp -a /srv/zabbix-5.2.0/ui/* /usr/local/nginx/html/
+  cd /srv
+  wget  http://download.rice666.com:8888/conf/simhei.ttf
+  \cp  /srv/simhei.ttf    /usr/local/nginx/html/zabbix/assets/fonts/DejaVuSans.ttf
   chown -R nginx:nginx /usr/local/nginx/html
   useradd zabbix
   sed -i '118c DBPassword=zabbix' /usr/local/zabbix/etc/zabbix_server.conf
   sed -i '133c DBPort=3306' /usr/local/zabbix/etc/zabbix_server.conf
-  cd /root/srv
-  wget http://www.rice666.com:8888/systemctl/zabbix-server.service
-  wget http://www.rice666.com:8888/systemctl/zabbix-agent.service
-  cp /root/srv/zabbix-server.service /usr/lib/systemd/system/zabbix-server.service 
-  cp /root/srv/zabbix-agent.service /usr/lib/systemd/system/zabbix-agent.service
+  cd /srv
+  wget http://download.rice666.com:8888/systemctl/zabbix-server.service
+  wget http://download.rice666.com:8888/systemctl/zabbix-agent.service
+  cp /srv/zabbix-server.service /usr/lib/systemd/system/zabbix-server.service 
+  cp /srv/zabbix-agent.service /usr/lib/systemd/system/zabbix-agent.service
   systemctl daemon-reload
   systemctl start zabbix-server && systemctl status zabbix-server
   systemctl start zabbix-agent && systemctl status zabbix-agent
-  wget http://www.rice666.com:8888/conf/zabbix.conf
+  wget http://download.rice666.com:8888/conf/zabbix.conf
   cp zabbix.conf  /usr/local/nginx/conf/conf.d/
 else
   install_zabbix
@@ -163,14 +163,13 @@ function install_zabbix_agent(){
 }
 
 function install_redis(){
-    mkdir /root/srv/
-    cd /root/srv/
+    cd /srv/
     wget   http://download.redis.io/releases/redis-5.0.6.tar.gz
     tar -xf redis-5.0.6.tar.gz
     cd redis-5.0.6
     make MALLOC=libc
     make install PREFIX=/usr/local/redis
-    cp /root/srv/redis-5.0.6/redis.conf  /usr/local/redis/bin/
+    cp /srv/redis-5.0.6/redis.conf  /usr/local/redis/bin/
     wget http://www.rice666.com:8888/systemctl/redis.service
     cp redis.service /usr/lib/systemd/system/redis.service
     sed -i '136c  daemonize yes'  /usr/local/redis/bin/redis.conf
@@ -181,8 +180,7 @@ function install_redis(){
 
 function install_rabbitmq(){
     yum -y install gcc glibc-devel make ncurses-devel openssl-devel xmlto perl wget gtk2-devel binutils-devel
-    mkdir /root/srv/
-    cd /root/srv
+    cd /srv
     wget http://erlang.org/download/otp_src_22.0.tar.gz
     wget https://github.com/rabbitmq/rabbitmq-server/releases/download/v3.8.0/rabbitmq-server-generic-unix-latest-toolchain-3.8.0.tar.xz
     tar -zxvf otp_src_22.0.tar.gz
@@ -201,8 +199,7 @@ function install_rabbitmq(){
 }
 
 function install_speedtest(){
-    mkdir /root/srv
-    cd /root/srv
+    cd /srv
     wget https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py
     chmod +x speedtest.py
     mv speedtest.py /usr/local/bin/speedtest

@@ -14,3 +14,10 @@ ngixn 优化
 在http 字段添加
 server_tokens off;
 然后重载nginx即可
+
+#nginx 防御部分攻击 有特征
+#括号内容是URI参数 
+if ($args ~* mynameis=ddos) {
+return 444;
+}
+然后重载nginx即可

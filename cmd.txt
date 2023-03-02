@@ -24,6 +24,11 @@ ssh root@10.4.45.47 -o stricthostkeychecking=no # 首次登陆免输yes登录
 
 ssh  -T  root@10.4.20.19  < tg.sh               #ssh 远程服务器执行本地脚本 
 
+#创建公私钥
+ssh-keygen -t rsa
+#把公钥传到其他服务器
+ssh-copy-id -i /root/.ssh/id_rsa.pub root@192.168.0.105
+
 centos7  时间同步
 #安装ntpdate
 yum -y install ntpdate
@@ -31,6 +36,12 @@ yum -y install ntpdate
 ntpdate -u  pool.ntp.org
 #同步完成后,date命令查看时间是否正确
 date
+
+#新装系统可能用的不是北京/上海时间 可以用以下命令
+cp /etc/localtime /etc/localtime-bak
+rm -f /etc/localtime
+ln -s /usr/share/zoneinfo/Asia/Shanghai  /etc/localtime 
+date 
 
 
 ##centos服务器如何用命令查看哪个程序内存占用情况

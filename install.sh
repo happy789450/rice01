@@ -14,7 +14,7 @@ read -p "请选择要做的事
 请选择要做的事:" choice
 
 function install_vim(){
-  yum -y install vim net-tools  wget  git bash-completion make bind-utils gcc m4 autoconf unzip zip lrzsz
+  yum -y install vim net-tools  wget  git bash-completion make bind-utils gcc m4 autoconf unzip zip lrzsz rsync
 }
 
 

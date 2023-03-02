@@ -20,11 +20,11 @@ function install_vim(){
 
 function install_nginx(){
   yum -y install pcre pcre-devel openssl-devel openssl gcc gcc-c++
-  mkdir /root/srv/ ; cd /root/srv/
-  wget http://download.rice666.com:8888/nginx-1.16.1.tar.gz
+  cd /srv/
+  wget https://nginx.org/download/nginx-1.16.1.tar.gz
   useradd -s /sbin/nologin -M nginx
   tar -xf nginx-1.16.1.tar.gz
-  cd /root/srv/nginx-1.16.1
+  cd /srv/nginx-1.16.1
   ./configure --prefix=/usr/local/nginx --user=nginx --group=nginx  --with-http_stub_status_module --with-http_ssl_module --with-stream
   make && make install 
   ln -s /usr/local/nginx/sbin/nginx /bin/nginx

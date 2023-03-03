@@ -14,7 +14,7 @@ read -p "请选择要做的事
 请选择要做的事:" choice
 
 function install_vim(){
-  yum -y install vim net-tools  wget  git bash-completion make bind-utils gcc m4 autoconf unzip zip lrzsz rsync
+  yum -y install vim net-tools  wget  git bash-completion make bind-utils gcc m4 autoconf unzip zip lrzsz rsync telnet
 }
 
 
@@ -32,8 +32,9 @@ function install_nginx(){
   sed -i '116a include /usr/local/nginx/conf/conf.d/*.conf;' /usr/local/nginx/conf/nginx.conf
   mkdir /usr/local/nginx/conf/conf.d/
   /usr/local/nginx/sbin/nginx
+  echo "/usr/local/nginx/sbin/nginx" >> /etc/rc.d/rc.local
   ps -ef |grep nginx
-  echo nginx 已启动
+  echo "nginx 已启动,并设置开机自起到 /etc/rc.d/rc.local"
 }
 
 function install_mysql(){

@@ -66,8 +66,6 @@ if [ $new_mysql_pass == $new_mysql_pass2  ];then
   mysql -uroot -p"$mysql_pass"  --connect-expired-password -e "set global validate_password_policy=0;"
   mysql -uroot -p"$mysql_pass"  --connect-expired-password -e "set global validate_password_length=1;"
   mysql -uroot -p"$mysql_pass"  --connect-expired-password -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$new_mysql_pass';"
-  echo validate_password_policy=0 >>/etc/my.cnf
-  echo validate_password_length=1 >>/etc/my.cnf
   systemctl restart mysqld  && systemctl status mysqld
   echo "新的mysql密码是$new_mysql_pass" >> /root/.mysql_history
   echo "已将密码追加到/root/.mysql_history,如忘记可查看"

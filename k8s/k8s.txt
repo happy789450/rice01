@@ -62,3 +62,7 @@ kube-scheduler-ct7-1            1/1     Running   1 (6h21m ago)   3d3h
 NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)        AGE    SELECTOR
 kubernetes   ClusterIP   10.1.0.1     <none>        443/TCP        3d3h   <none>
 nginx        NodePort    10.1.183.2   <none>        80:30342/TCP   3d     app=nginx
+
+#查看加入集群命令 master执行
+[root@ct7-2 ~]# kubeadm token create --print-join-command
+kubeadm join 192.168.0.102:6443 --token w4jjyy.5ussafk19xi05w0f     --discovery-token-ca-cert-hash sha256:0a34081331201954a80c77b8a9b6214c37ee65a7535fedf163a97fa8b4cb50e5 

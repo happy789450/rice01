@@ -4,7 +4,7 @@ read -p "请选择要做的事
 1，初始化（安装vim等）					10,安装测试网速软件	
 2，安装nginx						11,安装jenkins
 3，安装mysql5.7						12,安装shadowsocks
-4, 安装php7.2						13,安装node,npm
+4, 安装php8.2						13,安装node,npm
 5, 安装zabbix						14,安装gitlab
 6，一键安装nginx,mysql,php,zabbix			15,安装openresty+openstar
 7, 安装redis
@@ -74,29 +74,26 @@ else
 fi  
 }
 
-function install_php7(){
+function install_php8(){
   yum install -y gcc gcc-c++  make zlib zlib-devel pcre pcre-devel  libjpeg libjpeg-devel libpng libpng-devel freetype freetype-devel libxml2 libxml2-devel glibc glibc-devel glib2 glib2-devel bzip2 bzip2-devel ncurses ncurses-devel curl curl-devel e2fsprogs e2fsprogs-devel krb5 krb5-devel openssl openssl-devel openldap openldap-devel nss_ldap openldap-clients openldap-servers libxslt libxslt-devel
   cd /srv
-  wget http://download.rice666.com:8888/php-7.2.19.tar.gz
-  tar -xf php-7.2.19.tar.gz
-  cd php-7.2.19/
-  ./configure --prefix=/usr/local/php7 --with-config-file-path=/usr/local/php7/etc --with-curl --with-mhash --with-gd --with-gettext --with-iconv-dir --with-kerberos --with-ldap --with-libdir=lib64 --with-libxml-dir --with-openssl --with-pcre-regex --with-pdo-sqlite --with-pear --with-xmlrpc --with-xsl --with-zlib --enable-fpm --enable-ldap --enable-bcmath --enable-libxml --enable-inline-optimization --enable-mbregex --enable-mbstring --enable-opcache --enable-pcntl --enable-shmop --enable-soap --enable-sockets --enable-sysvmsg --enable-sysvsem --enable-sysvshm --enable-xml --enable-zip --enable-static --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-freetype-dir --with-jpeg-dir --with-png-dir --disable-debug
+  wget https://www.php.net/distributions/php-8.2.6.tar.gz
+  tar -xf php-8.2.6.tar.gz
+  cd php-8.2.6/
+  ./configure --prefix=/usr/local/php8 --with-config-file-path=/usr/local/php8/etc --with-curl --with-mhash --with-gd --with-gettext --with-iconv-dir --with-kerberos --with-ldap --with-libdir=lib64 --with-libxml-dir --with-openssl --with-pcre-regex --with-pdo-sqlite --with-pear --with-xmlrpc --with-xsl --with-zlib --enable-fpm --enable-ldap --enable-bcmath --enable-libxml --enable-inline-optimization --enable-mbregex --enable-mbstring --enable-opcache --enable-pcntl --enable-shmop --enable-soap --enable-sockets --enable-sysvmsg --enable-sysvsem --enable-sysvshm --enable-xml --enable-zip --enable-static --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-freetype-dir --with-jpeg-dir --with-png-dir --disable-debug
   make && make install
-  echo "PATH=$PATH:/usr/local/php7/bin"  >> /etc/profile
+  echo "PATH=$PATH:/usr/local/php8/bin"  >> /etc/profile
   echo "export PATH"  >> /etc/profile
   source /etc/profile
-  cp /usr/local/php7/etc/php-fpm.conf.default  /usr/local/php7/etc/php-fpm.conf
-  cp /usr/local/php7/etc/php-fpm.d/www.conf.default  /usr/local/php7/etc/php-fpm.d/www.conf
-  cp /root/srv/php-7.2.19/php.ini-production   /usr/local/php7/etc/php.ini 
-  sed -i  '18a pid = run/php-fpm.pid'  /usr/local/php7/etc/php-fpm.conf
-  sed -i '942c date.timezone = Asia/Shanghai' /usr/local/php7/etc/php.ini
-  sed -i '385c max_execution_time = 300' /usr/local/php7/etc/php.ini
-  sed -i '674c post_max_size = 32M'  /usr/local/php7/etc/php.ini
-  sed -i '395c max_input_time = 300' /usr/local/php7/etc/php.ini
-  cd /srv/ 
-  wget http://www.rice666.com:8888/systemctl/php-fpm.service
-  cd /srv
-  cp /srv/php-fpm.service /usr/lib/systemd/system/php-fpm.service
+  cp /usr/local/php8/etc/php-fpm.conf.default  /usr/local/php8/etc/php-fpm.conf
+  cp /usr/local/php8/etc/php-fpm.d/www.conf.default  /usr/local/php8/etc/php-fpm.d/www.conf
+  cp /srv/php-8.2.6/php.ini-production   /usr/local/php8/etc/php.ini 
+  sed -i  '18a pid = run/php-fpm.pid'  /usr/local/php8/etc/php-fpm.conf
+  sed -i '942c date.timezone = Asia/Shanghai' /usr/local/php8/etc/php.ini
+  sed -i '385c max_execution_time = 300' /usr/local/php8/etc/php.ini
+  sed -i '674c post_max_size = 32M'  /usr/local/php8/etc/php.ini
+  sed -i '395c max_input_time = 300' /usr/local/php8/etc/php.ini
+  cp /root/rice01/systemctl/php-fpm.service /usr/lib/systemd/system/php-fpm.service
   systemctl daemon-reload 
   systemctl start php-fpm && systemctl enable php-fpm
 }
@@ -291,14 +288,14 @@ elif [ "$choice" = 2 ];then
 elif [ "$choice" = 3 ];then
   install_mysql 
 elif [ "$choice" = 4 ];then
-  install_php7
+  install_php8
 elif [ "$choice" = 5 ];then
   install_zabbix
 elif [ "$choice" = 6 ];then
   install_vim
   install_nginx
   install_mysql
-  install_php7
+  install_php8
   install_zabbix
 elif [ "$choice" = 7 ];then
   install_redis

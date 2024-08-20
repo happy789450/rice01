@@ -207,11 +207,14 @@ function install_speedtest(){
 function install_jenkins(){
     cd /srv/
     wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
-    rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
-    yum -y install jenkins  java-1.8.0-openjdk
+    rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+    yum -y install jenkins  
+    wget https://download.oracle.com/java/17/latest/jdk-17_linux-x64_bin.rpm
+    rpm -ivh jdk-17_linux-x64_bin.rpm
+    
     systemctl start jenkins && systemctl enable jenkins &&systemctl status jenkins
     wget https://raw.githubusercontent.com/happy789450/rice01/main/conf/jenkins.conf
-    echo "默认端口号8080,可以通过nginx代理访问"
+    echo "推荐使用java17以上版本，不然可能起不来。默认端口号8080,可以通过nginx代理访问"
 }
 
 function install_shadowsocks(){

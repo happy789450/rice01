@@ -13,6 +13,8 @@ read -p "请选择要做的事
 0, 查看脚本说明
 请选择要做的事:" choice
 
+local_ip=$(ifconfig | egrep -A 1 "ens33|eth0" | grep inet | awk '{print $2}')
+
 function install_vim(){
   yum -y install vim net-tools  wget  git bash-completion make bind-utils gcc m4 autoconf unzip zip lrzsz rsync telnet
 }
@@ -28,7 +30,7 @@ function install_nginx(){
   ./configure --prefix=/usr/local/nginx --user=nginx --group=nginx  --with-http_stub_status_module --with-http_ssl_module --with-stream
   make && make install 
   ln -s /usr/local/nginx/sbin/nginx /bin/nginx
-  echo nginx is ok > /usr/local/nginx/html/index.html
+  echo "nginx is ok,im $local_ip" > /usr/local/nginx/html/index.html
   sed -i '116a include /usr/local/nginx/conf/conf.d/*.conf;' /usr/local/nginx/conf/nginx.conf
   mkdir /usr/local/nginx/conf/conf.d/
   /usr/local/nginx/sbin/nginx

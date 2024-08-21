@@ -7,7 +7,7 @@ read -p "请选择要做的事
 4, 安装php8.2						13,安装node,npm
 5, 安装zabbix						14,安装gitlab
 6，一键安装nginx,mysql,php,zabbix			15,安装openresty+openstar
-7, 安装redis
+7, 安装redis						16,安装prometheus & grafana
 8, 安装zabbix-agent
 9, 安装rabbitmq				
 0, 查看脚本说明

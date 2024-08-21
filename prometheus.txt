@@ -62,6 +62,9 @@ systemctl start grafana-server
 systemctl enable grafana-server
 
 默认端口号3000
-默认的用户名:admin 密码:admin
+默认的用户名:admin 密码:admin 第一次登陆后提示修改密码
 设置—>Data sources—>Add data sources
 选择Prometheus
+
+grafana 仪表盘官网下载，然后去页面导入
+https://grafana.com/grafana/dashboards/

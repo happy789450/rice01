@@ -104,23 +104,23 @@ function install_zabbix(){
   read -p "请输入数据库密码:" mysql_passwd
   read -p "请再次输入数据库密码:" mysql_passwd2
 if [ $mysql_pass == $mysql_pass2  ];then
-  yum -y install net-snmp-devel curl-devel libevent-devel
-  mkdir /srv ;  cd /srv/
-  wget https://cdn.zabbix.com/zabbix/sources/stable/7.0/zabbix-7.0.3.tar.gz
-  tar -xf zabbix-7.0.3.tar.gz
-  cd /srv/zabbix-7.0.3
+  yum -y install net-snmp-devel curl-devel libevent-devel libxml2 libxml2-devel
+  cd /srv/
+  wget https://cdn.zabbix.com/zabbix/sources/stable/5.0/zabbix-5.0.9.tar.gz
+  tar -xf zabbix-5.0.9.tar.gz
+  cd /srv/zabbix-5.0.9
   ./configure --prefix=/usr/local/zabbix --enable-server --enable-agent --with-mysql --enable-ipv6 --with-net-snmp --with-libcurl --with-libxml2
-  cd /srv/zabbix-7.0.3/
+  cd /srv/zabbix-5.0.9/
   make && make install
   mysql -uroot -p$mysql_passwd <<EOF 
 create database zabbix character set utf8 collate utf8_bin;
 grant all on zabbix.* to zabbix@"localhost" identified by "zabbix";
 EOF
-  cd /srv/zabbix-7.0.3/database/mysql/
+  cd /srv/zabbix-5.0.9/database/mysql/
   mysql -uzabbix -pzabbix zabbix < schema.sql
   mysql -uzabbix -pzabbix zabbix < images.sql
   mysql -uzabbix -pzabbix zabbix < data.sql
-  cp -a /srv/zabbix-7.0.3/ui/* /usr/local/nginx/html/
+  cp -a /srv/zabbix-5.0.9/ui/* /usr/local/nginx/html/
   \cp  /root/rice01/conf/simhei.ttf    /usr/local/nginx/html/zabbix/assets/fonts/DejaVuSans.ttf
   chown -R nginx:nginx /usr/local/nginx/html
   useradd zabbix

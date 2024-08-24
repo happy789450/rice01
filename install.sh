@@ -109,26 +109,28 @@ function install_zabbix(){
 if [ $mysql_pass == $mysql_pass2  ];then
   yum -y install net-snmp-devel curl-devel libevent-devel libxml2 libxml2-devel
   cd /srv/
-  wget https://cdn.zabbix.com/zabbix/sources/stable/5.0/zabbix-5.0.9.tar.gz
-  tar -xf zabbix-5.0.9.tar.gz
-  cd /srv/zabbix-5.0.9
+  wget https://cdn.zabbix.com/zabbix/sources/stable/6.4/zabbix-6.4.9.tar.gz
+  tar -xf zabbix-6.4.9.tar.gz
+  cd /srv/zabbix-6.4.9
   ./configure --prefix=/usr/local/zabbix --enable-server --enable-agent --with-mysql --enable-ipv6 --with-net-snmp --with-libcurl --with-libxml2
-  cd /srv/zabbix-5.0.9/
+  cd /srv/zabbix-6.4.9/
   make && make install
   mysql -uroot -p$mysql_passwd <<EOF 
 create database zabbix character set utf8 collate utf8_bin;
-grant all on zabbix.* to zabbix@"localhost" identified by "zabbix";
+grant all on zabbix.* to zabbix@"%" identified by "zabbix";
 EOF
-  cd /srv/zabbix-5.0.9/database/mysql/
+  cd /srv/zabbix-6.4.9/database/mysql/
   mysql -uzabbix -pzabbix zabbix < schema.sql
   mysql -uzabbix -pzabbix zabbix < images.sql
   mysql -uzabbix -pzabbix zabbix < data.sql
-  cp -a /srv/zabbix-5.0.9/ui/* /usr/local/nginx/html/
+  mkdir /usr/local/nginx/html/zabbix/
+  cp -a /srv/zabbix-6.4.9/ui/* /usr/local/nginx/html/zabbix/
   \cp  /root/rice01/conf/simhei.ttf    /usr/local/nginx/html/zabbix/assets/fonts/DejaVuSans.ttf
   chown -R nginx:nginx /usr/local/nginx/html
   useradd zabbix
   sed -i '118c DBPassword=zabbix' /usr/local/zabbix/etc/zabbix_server.conf
   sed -i '133c DBPort=3306' /usr/local/zabbix/etc/zabbix_server.conf
+  # 修改配置文件 AllowUnsupportedDBVersions=1
   cp /root/rice01/systemctl/zabbix-server.service /usr/lib/systemd/system/zabbix-server.service 
   cp /root/rice01/systemctl/zabbix-agent.service /usr/lib/systemd/system/zabbix-agent.service
   systemctl daemon-reload
@@ -143,16 +145,13 @@ fi
 function install_zabbix_agent(){
   yum -y install net-snmp-devel curl-devel libevent-devel
   cd /srv/
-  wget https://cdn.zabbix.com/zabbix/sources/stable/4.0/zabbix-4.0.31.tar.gz
-  tar -xf zabbix-4.0.31.tar.gz
-  cd /srv/zabbix-4.0.31
+  wget https://cdn.zabbix.com/zabbix/sources/stable/6.4/zabbix-6.4.9.tar.gz
+  tar -xf zabbix-6.4.9.tar.gz
+  cd /srv/zabbix-6.4.9
   ./configure --prefix=/usr/local/zabbix --enable-agent --with-mysql --enable-ipv6 --with-net-snmp --with-libcurl --with-libxml2
   make && make install
   useradd zabbix
-  cd /srv/
-  wget http://www.rice666.com:8888/systemctl/zabbix-server.service
-  wget http://www.rice666.com:8888/systemctl/zabbix-agent.service
-  cp /srv/zabbix-agent.service /usr/lib/systemd/system/zabbix-agent.service
+  cp /root/rice01/systemctl/zabbix-agent.service /usr/lib/systemd/system/zabbix-agent.service
   systemctl daemon-reload
   systemctl start zabbix-agent && systemctl status zabbix-agent
 }

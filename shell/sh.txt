@@ -1,0 +1,18 @@
+#常用shell参数
+#打印时间，获取时间  更多祥见date --help
+[root@ct7-1 test]# date
+2024年 08月 26日 星期一 16:34:42 CST
+[root@ct7-1 test]# date +%F
+2024-08-26
+[root@ct7-1 test]# date +%T
+16:34:17
+[root@ct7-1 test]# date  +%F\ %T
+2024-08-26 16:34:23
+#赋值到变量
+time=$(date +%F\ %T)
+echo "now time is $time"
+now time is 2024-08-26 16:38:09
+
+
+
+

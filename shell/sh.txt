@@ -13,6 +13,42 @@ time=$(date +%F\ %T)
 echo "now time is $time"
 now time is 2024-08-26 16:38:09
 
+#数字判断
+a=10
+b=20
+if [ $a == $b ];
+then
+	echo 'a等于b'
+else
+	echo 'a不等于b'
+fi
+#关系运算符只支持数字，不支持字符串，除非字符串的值是数字。
+-eq 相等
+-ne 不等
+-gt 大于
+-lt 小于
+-ge 大于等于
+-le 小于等于
+[root@localhost ~]$ [ 10 -eq 10 ] 
+[root@localhost ~]$ echo $? 
+0
 
+-a 与（并且）运算，两个表达式都为 true 才返回 true。 [ $a -lt 20 -a $b -gt 100 ] 返回 false。
+-o 或（或者）运算，有一个表达式为 true 则返回 true。 [ $a -lt 20 -o $b -gt 100 ] 返回 true。
+! 非运算，表达式为 true 则返回 false，否则返回 true  [ ! false ] 返回 true。
+与运算：一个为假即为假，全部为真才是真
+或运算：一个为真即为真，全部为假才是假
+非运算：表达式为 true 则返回 false，否则返回 true
 
+#字符串运算符 假定变量 a 为 “abc”，变量 b 为 “efg”：
+=  检测两个字符串是否相等，相等返回 true。   [ $a = $b ] 返回 false。
+!= 检测两个字符串是否相等，不相等返回 true。 [ $a != $b ] 返回 true。 
+-z 检测字符串长度是否为0，为0返回 true。     [ -z $a ] 返回 false。
+-n 检测字符串长度是否为0，不为0返回 true。   [ -n $a ] 返回 true。
+str 检测字符串是否为空，不为空返回 true。    [ $a ] 返回 true。
 
+文件测试运算符
+-e file 检测文件（包括目录）是否存在，如果是，则返回 true。 [ -e $file ] 返回 true。
+-d file 检测文件是否是目录，如果是，则返回 true。 
+-f file 检测文件是否是普通文件（既不是目录，也不是设备文件），如果是，则返回 true。
+-s file 检测文件是否为空（文件大小是否大于0），不为空返回 true。

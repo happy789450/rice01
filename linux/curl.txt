@@ -1,0 +1,7 @@
+curl -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 Edg/128.0.0.0"  www.baidu.com
+
+# -A 参数 修改 指定 Usaer-Agent 和 Referer 请求头的值
+# -d 数据：发送 POST 请求时附带的数据。
+# -H "头部信息"：发送请求时附加的自定义头部信息。
+# -X 请求方法：指定请求的方法，如 GET、POST、PUT、DELETE 等。
+

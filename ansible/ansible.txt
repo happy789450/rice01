@@ -18,3 +18,66 @@ vim /etc/ansible/hosts
 
 4.测试链接
 ansible test -m ping   #输出正常则说明没有问题
+
+
+playbook是什么
+playbook是ansible用于配置,部署和管理托管主机剧本,
+通过playbook的详细描述,执行其中的一系列tasks,可以让远端主机达到预期的状态
+
+也可以说,playbook字面意思即剧本,现实中由演员按剧本表演,
+在ansible中由计算机进行安装,部署应用,提供对外服务,以及组织计算机
+处理各种各样的事情
+
+为什么要用playbook
+执行一些简单的任务,使用ad-hoc命令可以方便的解决问题,
+但有时一个设施过于复杂时,执行ad-hoc命令是不合适的,最好使用playbook
+
+playbook可以反复使用编写的代码,可以放到不同的机器上面,像函数一样,最大化的利用代码,
+在使用ansible的过程中,处理的大部分操作都是在编写playbook
+
+playbook语法格式
+playbook由YAML语言编写,遵循YAML标准
+在同一行中,#之后的内容表示注释
+同一个列表中的元素应该保持相同的缩进
+playbook由一个或多个play组成
+play中hosts,variables,roles,tasks,等对象的表示
+方法都是键值中间以": "分隔表示
+YAML还有一个小的怪癖,它的文件开始行都应该是 --- , 
+这是YAML格式的一部分,表示一个文件的开始
+
+playbook构成
+hosts : 定义将要执行playbook的远程主机组
+vars: 定义playbook运行时需要使用的变量
+tasks: 定义将要在远程主机上执行的任务列表
+handlers: 定义task执行完成以后需要调用的任务
+
+执行结果
+使用ansible-playbook运行playbook文件,输出内容
+为JSON格式,由不同颜色组成便于识别
+绿色代表执行成功
+***代表系统 状态发生改变
+红色代表执行失败
+
+第一个playbook
+vim ping.yml
+---      					#第一行,表示开始
+- host: all 
+  remote_user: root
+  tasks:
+    - ping:
+:wq
+ansible-playbook ping.yml -f 5
+
+-f 并发进程数量,默认是5
+- hosts行  内容是一个 (多个) 组或主机的patterns , 以逗号为分隔符
+- remote_user  账户名
+
+tasks 
+命令的集合
+每一个play包含了一个task列表 (任务列表)
+一个task在其所对应的所有主机上(通过 hosts pattern
+匹配的所有主机) 执行完毕之后,下一个task才会执行
+
+hosts
+主机的集合
+定义要执行任务的主机

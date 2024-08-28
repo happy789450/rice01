@@ -87,3 +87,25 @@ http {
 }
 
 
+# nginx 设置日志时间格式 在servser里面添加
+if ( $time_iso8601 ~ "^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})" ) {
+  set $year $1;
+  set $month $2;
+  set $day $3;
+  set $hour $4;
+  set $minutes $5;
+  set $seconds $6;
+  set $time_zh "$1-$2-$3 $4:$5:$6";
+}
+# 获取毫秒时间戳，并拼接到$time_zh之后
+  if ( $msec ~ "(\d+)\.(\d+)") {
+     set $time_zh_ms $time_zh.$2;
+}
+# 修改 log_format  main  [$time_local] 为 log_format  main  [$time_zh_ms]  其它不变 重载即可
+
+
+# nginx转发真实ip 在location 里面添加 重载即可
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+

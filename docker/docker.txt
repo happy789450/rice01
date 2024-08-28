@@ -1,0 +1,31 @@
+# docker 常用命令
+docker search xxx (docker 搜索)
+docker pull xxx (下载镜像)
+docker images (查看镜像)
+docker save docker.io/busybox:latest -o busybox.tar (将docker镜像导出为tar文件)
+docker load -i busybox.tar(通过tar包文件导入镜像)
+docker run -it docker.io/centos:latest /bin/bash(启动镜像)
+docker history (镜像名) 查看镜像制作历史
+docker inspect (镜像名)查看镜像底层信息
+docker rmi (镜像名)删除镜像
+docker tag (修改镜像名和标签)
+docker run (运行新的容器)
+docker stop(ID) 关闭容器
+docker start (ID) 开启容器
+docker restart (ID) 重启容器
+docker ps -a 查看所有容器列表
+docker rm (id) 删除容器
+docker top   查看容器列表
+docker exec -it  (ID) /bin/bash  进入容器,退出时不会关闭容器
+docker commit +容器ID  +生成镜像名字 (使用启动的容器创建新的镜像)
+
+Dockerfile 语法格式
+FROM:基础镜像
+MAINTAINER:镜像创建者信息
+ADD:复制文件到镜像
+RUN:制作镜像时执行的;命令 可以有多条
+EXPOSE:开放的端口
+ENV:设置变量
+WORKDIR:定义容器默认工作目录
+CMD:容器启动时执行的命令,只能有一条cmd
+docker build -t (镜像名) Dockerfile 所在目录 当前目录可以用点代替

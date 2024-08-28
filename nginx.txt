@@ -15,6 +15,42 @@ ngixn 优化
 server_tokens off;
 然后重载nginx即可
 
+# 工作进程数：
+events {
+    worker_connections  1024;  # 每个工作进程的最大连接数
+}
+
+# 设置keepalive连接时间：
+http {
+    keepalive_timeout 65;  # 保持连接的时间
+}
+
+# 开启gzip压缩：
+http {
+    gzip on;  # 开启gzip压缩
+}
+
+# 配置缓冲区大小： 
+http {
+    client_body_buffer_size 1K;  # 客户端请求体缓冲区大小
+    client_header_buffer_size 1k;  # 客户端请求头缓冲区大小
+    large_client_header_buffers 4 4k;  # 大客户端请求头缓冲区数量和大小
+}
+
+# 设置最大文件描述符数：
+worker_rlimit_nofile 65535;  # 设置工作进程的最大文件打开数
+
+# 设置最大请求体大小：
+http {
+    client_max_body_size 10m;  # 设置最大请求体大小
+}
+
+
+# 配置静态文件缓存：
+location ~* \.(jpg|jpeg|png|css|js|ico|html)$ {
+    expires 30d;  # 设置缓存过期时间
+}
+
 #nginx 防御部分攻击 有特征
 #括号内容是URI参数 
 if ($args ~* mynameis=ddos) {

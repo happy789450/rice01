@@ -21,3 +21,33 @@ if ($args ~* mynameis=ddos) {
 return 444;
 }
 然后重载nginx即可
+
+#限制访问某些目录 在server字段里面添加 重载
+if ($uri ~* api) {
+return 444;
+}
+
+#限制ip访问 允许ip访问 在server字段添加
+allow 127.0.0.1;
+deny 192.168.31.85;
+deny all;
+
+# nginx限制请求频率 请求次数
+http {
+
+# limit_req_zone: 定义了一个名为mylimit的内存区域，大小为10MB，允许的请求速率为每秒2个请求。
+# zone=mylimit:10m: mylimit是定义的内存区域的名称，后面跟着内存区域的大小，这里是10MB。
+# rate=2r/s: rate指定了允许的请求速率，这里是每秒2个请求。
+# limit_req: 指定使用mylimit区域来限制请求的频率。
+# 这个配置将导致如果某个IP地址尝试超过每秒2个请求的频率，Nginx将返回状态码503，表示服务不可用。
+    limit_req_zone $binary_remote_addr zone=mylimit:10m rate=2r/s;
+ 
+    server {
+        location / {
+            limit_req zone=mylimit;
+            proxy_pass http://backend;
+        }
+    }
+}
+
+

@@ -52,3 +52,7 @@ curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos
 
 #rsync 远程同步文件  指定端口同步文件
 rsync   -av -e "ssh -p 22" xxx/   root@192.168.1.1:/tmp/xxx/
+
+
+# tar 打包不包含目录 打包命令+空格+压缩后文件存放目录及名称+空格+"-C"+源文件目录+空格+文件名称
+tar -zcvf ./back/25/index.tar.gz -C/usr/local/nginx/html index.html

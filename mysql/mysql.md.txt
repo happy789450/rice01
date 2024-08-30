@@ -1,0 +1,48 @@
+
+
+```
+# 操作前缀简要意思
+ALTER     改变
+DROP      剔除
+UPDATE    更新
+SELECT    选择
+MODIFY    修改
+INSERT    插入
+DELETE    删除
+SHOW      展示
+
+# 创建库命令
+create database test character set utf8 collate utf8_bin;
+# 建表命令  #注意字段用反撇号``，值用单引号'' 
+CREATE TABLE IF NOT EXISTS student (  
+    `name` varchar(10) NOT NULL DEFAULT '张三' COMMENT '姓名',  
+    `id` int(3) NOT NULL AUTO_INCREMENT COMMENT '学号',  
+    PRIMARY KEY(`id`)  
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+
+# 删除数据库
+DROP DATABASE 数据库名;
+
+# 删除数据库的某个表
+DROP TABLE 表名;
+
+# 查看表结构
+mysql> desc student;
+
+# 表重命名
+ALTER TABLE 旧表名 RENAME AS 新表名;
+mysql> alter table student rename as student1;
+
+# 字段重命名
+ALTER TALBE 表名 CHANGE 旧字段名 新字段名 新字段属性;
+-- 将class表的字段name1重命名为name 且该字段属性被修改
+ALTER TABLE class CHANGE `name1` `name` VARCHAR(30);
+mysql> alter table student change `name1` `name` varchar(20);
+
+# 添加字段
+ALTER TABLE 表名 ADD 字段名 基本类型(类型大小) [列属性];
+```
+
+
+
+create database test character set utf8 collate utf8_bin;

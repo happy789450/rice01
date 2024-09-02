@@ -74,6 +74,104 @@ INSERT INTO 表名 (字段名) VALUES(字段值)
 -- 添加了一个年龄为10 姓名为张三的数据在表中
 INSERT INTO `student` (`age`,`name`) VALUES ('10','张三');
 
+# 有字段添加多条数据
+INSERT INTO 表名 (字段名) VALUES(字段值1),(字段值2),…
+-- 添加多条数据
+INSERT INTO `student` (`age`,`name`) VALUES ('20','JACK'),('30','BOB')；
 
+# 无字段添加数据
+INSERT INTO 表名 VALUES (字段值)
+-- 如果没有指明字段那么将按照表结构进行匹配,值不匹配则报错
+mysql> insert into `student` values ('tom','4','10');
+
+# 无字段添加多条数据
+INSERT INTO 表名 VALUES (字段值1),(字段值2)…
+-- 无字段添加多条数据
+-- 注:需要写入表中所有字段的值
+INSERT INTO `class` VALUES ('MIKE','5','8'),('JHON','6','15')；
+```
+
+update（修改数据）
+
+sql部分条件表达式
+
+![在这里插入图片描述](https://i-blog.csdnimg.cn/direct/b7ebd05e7ff94a89aec1a5a469036c58.png#pic_center)
 
 ```
+# 修改数据的某个字段
+UPDATE 表名 SET 字段=字段值 WHERE [条件]
+-- 将 id为1 的数据的姓名修改为 jerry
+mysql> update student set name='jerry' where id=1;
+
+# 修改数据的多个字段
+UPDATE 表名 SET 字段1=字段值1,字段值2=字段值2,… WHERE [条件]
+-- 将 id为1 的数据的 姓名和年龄修改为 egg 18
+mysql> update student set name='egg',age='18' where id=1;
+
+
+# DELETE(删除)
+DELETE FROM 表名
+-- 删除表中所有数据,保留计数器(自增的值)的值
+mysql> delete from student_copy1;
+
+# TRUNCATE(截断)
+TRUNCATE TABLE 表名
+-- 删除表中所有数据,计数器重置
+mysql> truncate table student_copy1;
+# 两者区别
+
+```
+
+| DELETE              | TRUNCATE       |
+| ------------------- | -------------- |
+| 计数器不重置(自增量为上一条数据+1) | 计数器重置(重新设置自增列) |
+|                     | 不会影响事务         |
+
+```
+# DQL(数据查询语言)
+DATA QUERY LANGUAGE
+SELECT语法结构
+
+SELECT [ALL | DISTINCT]-- alias  别名
+{* | TABLE.* | [TABLE.field1,AS alias1],[TABLE.field2,AS alias2]....}
+FROM TABLE_Name1 [AS TABLE_ALIAS]
+	[LEFT | RIGHT | INNER JOIN TABLE_NAME2]   -- 联表查询方式
+	[WHERE 条件] 							     -- 指定结果需要满足的条件
+	[GROUP BY ...]							  -- 指定结果按照哪几个字段来分组
+	[HAVING]								  -- 过滤分组的记录必须满足的次要条件
+	[ORDER BY ...]							  -- 指定查询记录按一个或多个条件排序
+	[LIMIT {[offset,] row_count | row_countOFFSET offset}];-- 指定查询的记录从哪条至哪条
+注:[ ] 括号代表可选的, { } 括号代表必选得 ,结构不可改变顺序
+
+# SELECT(查询数据)
+查询单个字段数据
+SELECT 字段1 From 表名
+-- 查询student中所有的姓名
+mysql> select name  from student;
+
+# 查询多个字段数据
+SELECT 字段1,字段2… FROM 表名
+-- 查询student中所有的学号和姓名
+mysql> select id , name  from student;
+
+数据取别名
+SELECT 字段 AS 别名 FROM 表名
+mysql> select name as n ,age as a from student;
+
+```
+
+#### where 条件字句
+
+| 运算符         | 语法                  | 描述                 |
+| ----------- | ------------------- | ------------------ |
+| IS NULL     | a IS NULL           | a为空则真，否则假          |
+| IS NOT NULL | a IS NOT NULL       | a不为空则真,否则假         |
+| BETWEEN…AND | a BETWEEN b AND c   | a在b和c之间为真,否则假      |
+| LIKE        | a LIKE b            | SQL匹配 ,a匹配b为真,否则为假 |
+| IN          | a IN (X1,X2,X3,X4…) | a 在括号范围内则真,否则为假    |
+
+
+
+
+
+# 

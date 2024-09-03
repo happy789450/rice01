@@ -1,0 +1,49 @@
+CentOS 7 安装 ELK (Elasticsearch, Logstash, Kibana) 的步骤如下：
+安装Java：
+ELK stack依赖Java，所以首先安装Java。
+sudo yum install java-1.8.0-openjdk
+
+安装Elasticsearch：
+sudo rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch
+echo '[elasticsearch-7.x]
+name=Elasticsearch repository for 7.x packages
+baseurl=https://artifacts.elastic.co/packages/7.x/yum
+gpgcheck=1
+gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+enabled=1
+autorefresh=1
+type=rpm-md' | sudo tee /etc/yum.repos.d/elasticsearch.repo
+ 
+sudo yum -y  install elasticsearch
+sudo systemctl start elasticsearch
+sudo systemctl enable elasticsearch
+
+安装Kibana：
+echo '[kibana-7.x]
+name=Kibana repository for 7.x packages
+baseurl=https://artifacts.elastic.co/packages/7.x/yum
+gpgcheck=1
+gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+enabled=1
+autorefresh=1
+type=rpm-md' | sudo tee /etc/yum.repos.d/kibana.repo
+ 
+sudo yum install kibana
+sudo systemctl start kibana
+sudo systemctl enable kibana
+
+安装Logstash：
+echo '[logstash-7.x]
+name=Logstash repository for 7.x packages
+baseurl=https://artifacts.elastic.co/packages/7.x/yum
+gpgcheck=1
+gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+enabled=1
+autorefresh=1
+type=rpm-md' | sudo tee /etc/yum.repos.d/logstash.repo
+ 
+sudo yum install logstash
+
+配置Logstash（如果需要）。
+
+完成以上步骤后，Elasticsearch、Kibana和Logstash将被安装并启动。可以通过访问 http://<your-server-ip>:5601 来使用Kibana，并根据需要配置索引模式和仪表板。

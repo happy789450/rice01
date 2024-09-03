@@ -42,7 +42,46 @@ enabled=1
 autorefresh=1
 type=rpm-md' | sudo tee /etc/yum.repos.d/logstash.repo
  
-sudo yum install logstash
+yum install logstash
+systemctl start logstash
+systemctl enable logstash
+
+安装filebeat
+yum -y install filebeat
+修改filebeat 配置文件
+vim /etc/filebeat/filebeat.yml
+#output.elasticsearch:    //我们输出到logstash，把这行注释掉
+  #hosts: ["localhost:9200"]   //这行也注释掉
+output.logstash:
+  hosts: ["localhosts:5044"]
+
+vim /etc/filebeat/modules.d/nginx.yml
+- module: nginx
+  access:
+enabled: true
+var.paths: ["/usr/lcoal/nginx/logs/access.log*"]
+  error:
+enabled: true
+var.paths: ["/usr/local/nginx/logs/error.log*"]
+
+systemctl start filebeat
+systemctl enable filebeat
+systemctl status filebeat
+
+修改elasticsearch配置文件
+vim /etc/elasticsearch/elasticsearch.yml
+network.host: 0.0.0.0
+discovery.seed_hosts: ["127.0.0.1"]
+systemctl restart elasticsearch
+
+
+修改kibana配置文件
+vim /etc/kibana/kibana.yml
+server.host: 0.0.0.0
+elasticsearch.url: “http://192.168.31.186:9200”
+i18n.locale: "zh-CN"  #设置中文界面
+systemctl restart kibana
+浏览器里访问http://192.168.31.236:5601
 
 配置Logstash（如果需要）。
 

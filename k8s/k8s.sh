@@ -1,9 +1,13 @@
 #!/bin/bash
-
+# 以下指令适用于 Kubernetes 1.31。
 hostname=$(hostname)
 master_ip=$(ifconfig |awk 'NR==2{print $2}')
 
-#关闭防火墙
+# 将 SELinux 设置为 permissive 模式：
+setenforce 0
+sed -i 's/^SELINUX=ENFORCING&/SELINUX=permissive/' /etc/selinux/config
+
+# 关闭防火墙
 systemctl stop firewalld 
 systemctl disable firewalld 
 
@@ -34,20 +38,30 @@ systemctl daemon-reload
 systemctl restart docker
 systemctl enable docker 
 
-
-
-#添加阿里kubernetes源
-cat <<EOF > /etc/yum.repos.d/kubernetes.repo
+# 添加yum源 版本1.31
+cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
-baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64/
+baseurl=https://pkgs.k8s.io/core:/stable:/v1.31/rpm/
 enabled=1
 gpgcheck=1
-repo_gpgcheck=1
-gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
+gpgkey=https://pkgs.k8s.io/core:/stable:/v1.31/rpm/repodata/repomd.xml.key
+exclude=kubelet kubeadm kubectl cri-tools kubernetes-cni
 EOF
 
-yum -y  install kubectl kubelet kubeadm --nogpgcheck
+##添加阿里kubernetes源
+#cat <<EOF > /etc/yum.repos.d/kubernetes.repo
+#[kubernetes]
+#name=Kubernetes
+#baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64/
+#enabled=1
+#gpgcheck=1
+#repo_gpgcheck=1
+#gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
+#EOF
+
+#yum -y  install kubectl kubelet kubeadm --nogpgcheck
+yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
 systemctl enable kubelet
 
 #这里不用启动kubelet  会报错
@@ -58,7 +72,7 @@ kubeadm config images pull
 kubeadm init \
 --apiserver-advertise-address=$master_ip \
 --image-repository registry.aliyuncs.com/google_containers \
---kubernetes-version v1.23.4 \
+--kubernetes-version v1.31 \
 --service-cidr=10.1.0.0/16 \
 --pod-network-cidr=10.244.0.0/16
 

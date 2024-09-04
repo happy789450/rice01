@@ -1,3 +1,8 @@
+你需要在每台机器上安装以下的软件包：
+kubeadm：用来初始化集群的指令。
+kubelet：在集群中的每个节点上用来启动 Pod 和容器等。
+kubectl：用来与集群通信的命令行工具。
+
 关闭swap分区
 swapoff -a
 
@@ -65,4 +70,5 @@ nginx        NodePort    10.1.183.2   <none>        80:30342/TCP   3d     app=ng
 
 #查看加入集群命令 master执行
 [root@ct7-2 ~]# kubeadm token create --print-join-command
-kubeadm join 192.168.0.102:6443 --token w4jjyy.5ussafk19xi05w0f     --discovery-token-ca-cert-hash sha256:0a34081331201954a80c77b8a9b6214c37ee65a7535fedf163a97fa8b4cb50e5 
+kubeadm join 192.168.31.236:6443 --token o2550k.2vx4w7lzr1im44z7 \
+    --discovery-token-ca-cert-hash sha256:2f9f0e787e9cf7ebfa770c132e0df735c85e925392cc8cc399e1a697a0badbfd 

@@ -139,6 +139,13 @@ NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)        AGE    SELECT
 kubernetes   ClusterIP   10.1.0.1     <none>        443/TCP        3d3h   <none>
 nginx        NodePort    10.1.183.2   <none>        80:30342/TCP   3d     app=nginx
 
+# node加入集群 
+kubeadm join 192.168.31.236:6443 --token o2550k.2vx4w7lzr1im44z7 \
+    --discovery-token-ca-cert-hash sha256:2f9f0e787e9cf7ebfa770c132e0df735c85e925392cc8cc399e1a697a0badbfd --cri-socket unix:///var/run/cri-dockerd.sock
+
+# node 安装网络插件
+kubectl  apply -f /root/rice01/k8s/kube-flannel.yml
+
 #查看加入集群命令 master执行
 [root@ct7-2 ~]# kubeadm token create --print-join-command
 kubeadm join 192.168.31.236:6443 --token o2550k.2vx4w7lzr1im44z7 \

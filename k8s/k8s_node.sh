@@ -66,8 +66,7 @@ kubeadm config images pull
 #cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 #chown $(id -u):$(id -g) $HOME/.kube/config
 
+#成功之后 执行kubeadm join 命令  命令参数 在master init之后会生成
+
 #安装pod网络插件
 kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
-
-
-#成功之后 执行kubeadm join 命令  命令参数 在master init之后会生成

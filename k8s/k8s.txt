@@ -139,6 +139,11 @@ NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)        AGE    SELECT
 kubernetes   ClusterIP   10.1.0.1     <none>        443/TCP        3d3h   <none>
 nginx        NodePort    10.1.183.2   <none>        80:30342/TCP   3d     app=nginx
 
+# master节点执行 配置文件的复制（为了在node节点可以使用kubectl相关命令）
+scp /etc/kubernetes/admin.conf 192.168.31.244:/etc/kubernetes/
+echo "export KUBECONFIG=/etc/kubernetes/admin.conf" >> /etc/profile
+source  /etc/profile
+
 # node加入集群 
 kubeadm join 192.168.31.236:6443 --token o2550k.2vx4w7lzr1im44z7 \
     --discovery-token-ca-cert-hash sha256:2f9f0e787e9cf7ebfa770c132e0df735c85e925392cc8cc399e1a697a0badbfd --cri-socket unix:///var/run/cri-dockerd.sock

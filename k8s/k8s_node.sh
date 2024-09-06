@@ -14,12 +14,14 @@ swapoff -a
 sed -i '/swap/ s/^/#/g' /etc/fstab
 
 echo -e  "$node_ip  \t$hostname"  >> /etc/hosts
+echo -e  "$node_ip  \t$node"  >> /etc/hosts
 
 
 #配置内核参数，将桥接的IPv4流量传递到iptables的链
 cat > /etc/sysctl.d/k8s.conf <<EOF
 net.bridge.bridge-nf-call-ip6tables = 1
-net.bridge.bridge-nf-call-iptables = 1
+net.bridge.bridge-nf-call-iptables  = 1
+net.ipv4.ip_forward                 = 1
 EOF
 sysctl --system
 
@@ -33,6 +35,39 @@ sed -i  's/ExecStart=\/usr\/bin\/dockerd/ExecStart=\/usr\/bin\/dockerd --exec-op
 systemctl daemon-reload
 systemctl restart docker
 systemctl enable docker 
+
+
+yum install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+# 若没有wget，则执行
+yum install -y wget
+# 下载
+cd /srv
+wget https://gitee.com/rice01/linux/raw/master/cri-dockerd-0.3.4-3.el7.x86_64.rpm
+# 安装
+rpm -ivh cri-dockerd-0.3.4-3.el7.x86_64.rpm
+# 重载系统守护进程
+systemctl daemon-reload
+
+
+tee /etc/docker/daemon.json <<-'EOF'
+{
+  "registry-mirrors": ["https://c12xt3od.mirror.aliyuncs.com"]
+}
+EOF
+
+
+
+
+# 重载系统守护进程
+sudo systemctl daemon-reload
+# 设置cri-dockerd自启动
+sudo systemctl enable cri-docker.socket cri-docker
+# 启动cri-dockerd
+sudo systemctl start cri-docker.socket cri-docker
+# 检查Docker组件状态
+sudo systemctl status docker cir-docker.socket cri-docker
+
 
 
 #添加阿里kubernetes源
@@ -69,4 +104,4 @@ kubeadm config images pull
 #成功之后 执行kubeadm join 命令  命令参数 在master init之后会生成
 
 #安装pod网络插件
-kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+# kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml

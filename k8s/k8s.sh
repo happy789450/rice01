@@ -39,7 +39,8 @@ sudo yum install -y wget
 # 下载
 cd /srv/
 echo "cri-dockerd 软件较大，先下载"
-sudo wget https://github.com/Mirantis/cri-dockerd/releases/download/v0.3.4/cri-dockerd-0.3.4-3.el7.x86_64.rpm
+# wget https://github.com/Mirantis/cri-dockerd/releases/download/v0.3.4/cri-dockerd-0.3.4-3.el7.x86_64.rpm
+wget  https://gitee.com/rice01/linux/raw/master/cri-dockerd-0.3.4-3.el7.x86_64.rpm
 # 安装
 sudo rpm -ivh cri-dockerd-0.3.4-3.el7.x86_64.rpm
 # 重载系统守护进程
@@ -66,6 +67,15 @@ sudo systemctl enable cri-docker.socket cri-docker
 sudo systemctl start cri-docker.socket cri-docker
 # 检查Docker组件状态
 sudo systemctl status docker cir-docker.socket cri-docker
+
+
+# 下载 runc.amd64  
+cd /srv/
+wget https://gitee.com/rice01/linux/raw/master/runc.amd64
+# 安装
+install -m 755 runc.amd64 /usr/local/bin/runc
+# 验证
+runc -v
 
 
 ## 添加yum源 版本1.31
@@ -116,4 +126,4 @@ cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 chown $(id -u):$(id -g) $HOME/.kube/config
 
 #安装pod网络插件
-kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+# kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml

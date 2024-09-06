@@ -46,7 +46,7 @@ wget https://gitee.com/rice01/linux/raw/master/cri-dockerd-0.3.4-3.el7.x86_64.rp
 rpm -ivh cri-dockerd-0.3.4-3.el7.x86_64.rpm
 # 重载系统守护进程
 
-sed -n 's/--container-runtime-endpoint fd:\/\//--network-plugin=cni --pod-infra-container-image=registry.aliyuncs.com\/google_containers\/pause:3.7/pg'   /usr/lib/systemd/system/cri-docker.service
+sed -i 's/--container-runtime-endpoint fd:\/\//--network-plugin=cni --pod-infra-container-image=registry.aliyuncs.com\/google_containers\/pause:3.7/g'   /usr/lib/systemd/system/cri-docker.service
 
 systemctl daemon-reload
 

@@ -1,0 +1,63 @@
+# 在Kubernetes中启动一个Pod，你需要定义一个YAML文件，该文件描述了Pod的配置。以下是一个简单的Pod定义示例：
+
+vim my_nginx.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx
+spec:
+  selector:
+    matchLabels:
+      run: my-nginx
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        run: my-nginx
+    spec:
+      containers:
+      - name: my-nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+
+[root@ct7-5 k8s]# kubectl apply -f nginx.yml 
+deployment.apps/my-nginx created
+[root@ct7-5 k8s]# kubectl get deploy
+NAME       READY   UP-TO-DATE   AVAILABLE   AGE
+my-nginx   3/3     3            3           17m
+
+[root@ct7-5 k8s]# kubectl get pod -o wide
+NAME                        READY   STATUS    RESTARTS   AGE   IP           NODE    NOMINATED NODE   READINESS GATES
+my-nginx-684dd4dcd4-6cn5r   1/1     Running   0          15m   10.244.2.2   ct7-6   <none>           <none>
+my-nginx-684dd4dcd4-kc9bk   1/1     Running   0          15m   10.244.2.4   ct7-6   <none>           <none>
+my-nginx-684dd4dcd4-lfwqv   1/1     Running   0          15m   10.244.2.3   ct7-6   <none>           <none>
+
+
+# 创建Service
+vim my_service.yml
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-nginx
+  labels:
+    run: my-nginx
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+    targetPort: 80
+    protocol: TCP
+    name: http
+  selector:
+    run: my-nginx
+
+[root@ct7-5 k8s]# kubectl apply -f service.yml 
+service/my-nginx created
+[root@ct7-5 k8s]# kubectl get service
+NAME         TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
+kubernetes   ClusterIP   10.1.0.1       <none>        443/TCP          30h
+my-nginx     NodePort    10.1.167.223   <none>        8080:31303/TCP   3s
+
+# 浏览器访问 k8s任何一台node节点服务器，包括master +:31303 即可
+curl 192.168.31.244:31303

@@ -117,6 +117,9 @@ ct7-1   Ready    control-plane,master   3d3h   v1.23.4
 ct7-2   Ready    <none>                 3d     v1.23.4
 ct7-4   Ready    <none>                 3d     v1.23.4
 
+# k8s 在master上删除node 节点
+kubectl delete node <node-name>
+
 查看pods
 [root@ct7-1 ~]# kubectl get pods -n kube-system
 NAME                            READY   STATUS    RESTARTS        AGE
@@ -155,3 +158,11 @@ kubectl  apply -f /root/rice01/k8s/kube-flannel.yml
 [root@ct7-2 ~]# kubeadm token create --print-join-command
 kubeadm join 192.168.31.236:6443 --token o2550k.2vx4w7lzr1im44z7 \
     --discovery-token-ca-cert-hash sha256:2f9f0e787e9cf7ebfa770c132e0df735c85e925392cc8cc399e1a697a0badbfd 
+
+
+#  pod的几种状态 
+Pending（悬决）       pod已经被kubernetes系统接受，但有一个或者多个容器尚未创建，亦未运行，可以通过kubectl describe 查看处于 Pending 状态的原因
+Running （运行中）    Pod已经绑定到了某个节点，Pod中所有容器都已被创建，至少有一个容器任在运行
+Successed （成功）    Pod中的所有容器都已经执行成功并终止，并且不会再重启
+Failed （失败）       Pod中所有容器都终止，并且至少有一个容器是因为失败终止
+Unknown （未知）      因为某些原因无法取得Pod的状态，通常是因为与Pod所在主机通信失败

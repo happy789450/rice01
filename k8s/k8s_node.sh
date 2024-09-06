@@ -27,7 +27,8 @@ sysctl --system
 
 #安装docker
 wget https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo -O/etc/yum.repos.d/docker-ce.repo
-yum -y install docker-ce-18.06.1.ce-3.el7
+# yum -y install docker-ce-18.06.1.ce-3.el7
+yum install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 #更改docker的启动参数
 sed -i  's/ExecStart=\/usr\/bin\/dockerd/ExecStart=\/usr\/bin\/dockerd --exec-opt native.cgroupdriver=systemd/g'  /usr/lib/systemd/system/docker.service
@@ -35,9 +36,6 @@ sed -i  's/ExecStart=\/usr\/bin\/dockerd/ExecStart=\/usr\/bin\/dockerd --exec-op
 systemctl daemon-reload
 systemctl restart docker
 systemctl enable docker 
-
-
-yum install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 # 若没有wget，则执行
 yum install -y wget
@@ -47,6 +45,9 @@ wget https://gitee.com/rice01/linux/raw/master/cri-dockerd-0.3.4-3.el7.x86_64.rp
 # 安装
 rpm -ivh cri-dockerd-0.3.4-3.el7.x86_64.rpm
 # 重载系统守护进程
+
+sed -n 's/--container-runtime-endpoint fd:\/\//--network-plugin=cni --pod-infra-container-image=registry.aliyuncs.com\/google_containers\/pause:3.7/pg'   /usr/lib/systemd/system/cri-docker.service
+
 systemctl daemon-reload
 
 
@@ -86,7 +87,7 @@ systemctl enable kubelet
 
 #这里不用启动kubelet  会报错
 #提前拉取镜像  不然初始化的时候会等很久 也有可能失败
-kubeadm config images pull
+# kubeadm config images pull
 
 ##初始化k8s集群
 #kubeadm init \

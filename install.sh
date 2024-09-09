@@ -13,7 +13,7 @@ read -p "请选择要做的事
 0, 查看脚本说明
 请选择要做的事:" choice
 
-local_ip=$(ifconfig | egrep -A 1 "ens33|eth0" | grep inet | awk '{print $2}')
+local_ip=$(ifconfig | egrep -A 1 "ens33:|eth0:" | grep inet | awk '{print $2}')
 
 function install_vim(){
   yum -y install vim net-tools  wget  git bash-completion make bind-utils gcc m4 autoconf unzip zip lrzsz rsync telnet

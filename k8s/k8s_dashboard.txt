@@ -1,9 +1,10 @@
 在k8s集群完成后可以安装 图像界面
 master执行
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.0/aio/deploy/recommended.yaml
+# kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.0/aio/deploy/recommended.yaml
+kubectl apply -f /root/rice01/k8s/recommended.yaml
 
 然后执行
-kubectl proxy
+kubectl proxy &
 输出 Starting to serve on 127.0.0.1:8001 则执行成功
 
 使用nginx做反向代理  配置文件里面要 自己生成证书 或者使用域名 买证书 

@@ -1,8 +1,8 @@
-nginx 配置自制SSL证书
-执行2条命令即可
+# nginx 配置自制SSL证书
+# 执行2条命令即可
 openssl genrsa -out privkey.pem 2048
-openssl req -new -key privkey.pem -out cert.csr
-
+openssl req -new -x509 -key privkey.pem -out cacert.pem -days 1095
+# 一直按回车即可
 会生成2个文件 cacert.pem  privkey.pem
 
 然后在nginx 要用到的配置文件里面加上即可

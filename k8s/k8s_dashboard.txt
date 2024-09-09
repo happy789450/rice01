@@ -11,15 +11,22 @@ kubectl proxy &
 nginx 配置文件参考  k8s_dashboard.conf
 
 
-创建账户  获取token
-#创建账户
+# 创建用户
 kubectl create serviceaccount dashboard-admin -n kubernetes-dashboard
-#授权
-kubectl create clusterrolebinding dashboard-admin-rb --clusterrole=cluster-admin --serviceaccount=kubernetes-dashboard:dashboard-admin
+# 用户授权
+kubectl create clusterrolebinding dashboard-admin --clusterrole=cluster-admin --serviceaccount=kubernetes-dashboard:dashboard-admin
+# 获取用户Token
+kubectl create token dashboard-admin -n kubernetes-dashboard
+# 使用输出的token登录Dashboard。
 
-#获取账号token
-kubectl get secrets -n kubernetes-dashboard |grep dashboard-admin
-#这里会显示dashboard 名字 下面的命令替换即可
-kubectl describe secrets dashboard-admin-token-xxxx -n kubernetes-dashboard
 
+#创建账户  获取token
+##创建账户
+#kubectl create serviceaccount dashboard-admin -n kubernetes-dashboard
+##授权
+#kubectl create clusterrolebinding dashboard-admin-rb --clusterrole=cluster-admin --serviceaccount=kubernetes-dashboard:dashboard-admin
+##获取账号token
+#kubectl get secrets -n kubernetes-dashboard |grep dashboard-admin
+##这里会显示dashboard 名字 下面的命令替换即可
+#kubectl describe secrets dashboard-admin-token-xxxx -n kubernetes-dashboard
 #输出的 token 复制粘贴到 登录页面 即可

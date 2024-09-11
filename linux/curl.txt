@@ -4,4 +4,16 @@ curl -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, li
 # -d 数据：发送 POST 请求时附带的数据。
 # -H "头部信息"：发送请求时附加的自定义头部信息。
 # -X 请求方法：指定请求的方法，如 GET、POST、PUT、DELETE 等。
-
+ 
+# curl 屏蔽输出
+curl -s http://192.168.31.58/status | awk 'NR==3{print $3}'
+[root@ct7-1 rice01]# curl  http://192.168.31.58/status | awk '{print $3}'
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   100  100   100    0     0   106k      0 --:--:-- --:--:-- --:--:--   97k
+1
+handled
+74
+Writing:
+[root@ct7-1 rice01]# curl -s http://192.168.31.58/status | awk 'NR==3{print $3}'
+75

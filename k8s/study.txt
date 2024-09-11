@@ -20,7 +20,7 @@ kube-controller-manager
 cloud-controller-manager (optional)
 与底层云驱动集成
 
-Node 组件
+# Node 组件
 在每个节点上运行，维护运行的 Pod 并提供 Kubernetes 运行时环境：
 
 kubelet
@@ -34,3 +34,18 @@ kube-proxy（可选）
 
 你的集群可能需要每个节点上运行额外的软件；例如，你可能还需要在 Linux 节点上运行 systemd 来监督本地组件
 
+# 插件（Addons）
+插件扩展了 Kubernetes 的功能。一些重要的例子包括：
+DNS
+集群范围内的 DNS 解析
+
+Web 界面（Dashboard）
+通过 Web 界面进行集群管理
+
+容器资源监控
+用于收集和存储容器指标
+
+集群层面日志
+用于将容器日志保存到中央日志存储
+
+# 

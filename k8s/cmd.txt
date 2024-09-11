@@ -1,0 +1,116 @@
+# k8s 常用命令
+k8s 还原命令
+kubeadm reset  --cri-socket=unix:///var/run/cri-dockerd.sock  # (还原和初始化要加这个socket)
+
+# 在master主机上查看node节点机器:
+[root@ct7-1 ~]# kubectl get nodes 
+NAME    STATUS   ROLES                  AGE    VERSION
+ct7-1   Ready    control-plane,master   3d3h   v1.23.4
+ct7-2   Ready    <none>                 3d     v1.23.4
+ct7-4   Ready    <none>                 3d     v1.23.4
+
+# k8s 在master上删除node 节点
+kubectl delete node <node-name>
+
+# 查看k8s系统的pods
+[root@ct7-1 ~]# kubectl get pods -n kube-system
+NAME                            READY   STATUS    RESTARTS        AGE
+coredns-6d8c4cb4d-jklwl         1/1     Running   1 (6h21m ago)   3d3h
+coredns-6d8c4cb4d-m5k4n         1/1     Running   1 (6h21m ago)   3d3h
+etcd-ct7-1                      1/1     Running   1 (6h21m ago)   3d3h
+kube-apiserver-ct7-1            1/1     Running   1 (6h21m ago)   3d3h
+kube-controller-manager-ct7-1   1/1     Running   1 (6h21m ago)   3d3h
+kube-flannel-ds-8gddc           1/1     Running   1 (6h20m ago)   3d
+kube-flannel-ds-g86t4           1/1     Running   1 (6h21m ago)   3d
+kube-flannel-ds-x9s7d           1/1     Running   1 (6h21m ago)   3d2h
+kube-proxy-hnp5k                1/1     Running   1 (6h20m ago)   3d
+kube-proxy-m4jgc                1/1     Running   1 (6h21m ago)   3d3h
+kube-proxy-r8jzm                1/1     Running   1 (6h21m ago)   3d
+kube-scheduler-ct7-1            1/1     Running   1 (6h21m ago)   3d3h
+
+# 查看自己启动的pod 
+[root@ct7-6 ~]# kubectl  get pods -o wide
+NAME                        READY   STATUS    RESTARTS   AGE     IP            NODE    NOMINATED NODE   READINESS GATES
+my-nginx-86bcf76b9f-4gmr4   1/1     Running   0          12m     10.244.2.20   ct7-6   <none>           <none>
+my-nginx-86bcf76b9f-8gkqd   1/1     Running   0          2m21s   10.244.2.22   ct7-6   <none>           <none>
+my-nginx-86bcf76b9f-c9k9c   1/1     Running   0          2m21s   10.244.2.24   ct7-6   <none>           <none>
+
+# 查看服务
+[root@ct7-1 ~]# kubectl get svc -o wide
+NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)        AGE    SELECTOR
+kubernetes   ClusterIP   10.1.0.1     <none>        443/TCP        3d3h   <none>
+nginx        NodePort    10.1.183.2   <none>        80:30342/TCP   3d     app=nginx
+
+# node加入集群 
+kubeadm join 192.168.31.236:6443 --token o2550k.2vx4w7lzr1im44z7 \
+    --discovery-token-ca-cert-hash sha256:2f9f0e787e9cf7ebfa770c132e0df735c85e925392cc8cc399e1a697a0badbfd --cri-socket unix:///var/run/cri-dockerd.sock
+
+# 查看加入集群命令 master执行
+[root@ct7-2 ~]# kubeadm token create --print-join-command
+kubeadm join 192.168.31.236:6443 --token o2550k.2vx4w7lzr1im44z7 \
+    --discovery-token-ca-cert-hash sha256:2f9f0e787e9cf7ebfa770c132e0df735c85e925392cc8cc399e1a697a0badbfd
+
+# 查看 Pod 的日志
+kubectl logs <pod-name>
+ 
+# 进入容器
+kubectl exec -it <pod-name> -- /bin/bash
+
+# 运行以下命令，将Nginx配置文件拷贝到本地：
+kubectl cp <pod名称>:/etc/nginx/nginx.conf ./nginx.conf
+修改本地的nginx.conf文件，根据你的需求进行相应的更改。
+# 使用以下命令将修改后的nginx.conf文件拷贝回Nginx Pod：
+kubectl cp ./nginx.conf <pod名称>:/etc/nginx/nginx.conf
+
+# pod时间与服务器时间不一致 
+方法1 进入pod 修改时间：
+cp /etc/localtime /etc/localtime-bak
+rm -f /etc/localtime
+ln -s /usr/share/zoneinfo/Asia/Shanghai  /etc/localtime 
+date
+
+# (推荐)方法2 修改创建pod yml文件：  vim nginx.yml
+        volumeMounts:
+          - name: timezone
+            mountPath: /etc/localtime                           # 挂载到容器的目录
+      volumes:
+         - name: timezone
+           hostPath: 
+             path: /usr/share/zoneinfo/Asia/Shanghai
+kubectl apply -f nginx.yml # 说明 重新应用后 会重新创建新的pod 旧的会被换掉
+
+
+# k8s 缩减 pod
+首先查看当前Deployment的副本数量：
+kubectl get deployment <deployment-name> -o wide
+[root@ct7-5 ~]# kubectl  get deployment my-nginx -o wide
+NAME       READY   UP-TO-DATE   AVAILABLE   AGE    CONTAINERS   IMAGES   SELECTOR
+my-nginx   5/5     5            5           5d2h   my-nginx     nginx    run=my-nginx
+
+# 然后使用kubectl scale命令来缩减副本数量。例如，如果你想将Deployment的副本数量减少到1
+[root@ct7-5 ~]# kubectl  scale deployment my-nginx --replicas=1
+deployment.apps/my-nginx scaled
+[root@ct7-5 ~]# kubectl  get deployment my-nginx -o wide
+NAME       READY   UP-TO-DATE   AVAILABLE   AGE    CONTAINERS   IMAGES   SELECTOR
+my-nginx   1/1     1            1           5d2h   my-nginx     nginx    run=my-nginx
+
+# k8s 扩容 pod  #也是用的 kubectl scale命令  eg:
+[root@ct7-5 ~]# kubectl  scale deployment my-nginx --replicas=5
+deployment.apps/my-nginx scaled
+[root@ct7-5 k8s]# kubectl  get pods  -o wide  #查看pod 可以看到正在扩容
+NAME                        READY   STATUS              RESTARTS   AGE     IP            NODE    NOMINATED NODE   READINESS GATES
+my-nginx-86bcf76b9f-4gmr4   1/1     Running             0          9m45s   10.244.2.20   ct7-6   <none>           <none>
+my-nginx-86bcf76b9f-8gkqd   0/1     ContainerCreating   0          3s      <none>        ct7-6   <none>           <none>
+my-nginx-86bcf76b9f-c9k9c   0/1     ContainerCreating   0          3s      <none>        ct7-6   <none>           <none>
+my-nginx-86bcf76b9f-cgp5f   0/1     ContainerCreating   0          3s      <none>        ct7-6   <none>           <none>
+my-nginx-86bcf76b9f-j85m9   0/1     ContainerCreating   0          3s      <none>        ct7-6   <none>           <none>
+[root@ct7-5 k8s]# kubectl  get deployment  my-nginx  -o wide
+NAME       READY   UP-TO-DATE   AVAILABLE   AGE    CONTAINERS   IMAGES   SELECTOR
+my-nginx   3/5     5            3           5d2h   my-nginx     nginx    run=my-nginx
+[root@ct7-5 k8s]# kubectl  get pods  -o wide
+NAME                        READY   STATUS    RESTARTS   AGE     IP            NODE    NOMINATED NODE   READINESS GATES
+my-nginx-86bcf76b9f-4gmr4   1/1     Running   0          9m59s   10.244.2.20   ct7-6   <none>           <none>
+my-nginx-86bcf76b9f-8gkqd   1/1     Running   0          17s     10.244.2.22   ct7-6   <none>           <none>
+my-nginx-86bcf76b9f-c9k9c   1/1     Running   0          17s     10.244.2.24   ct7-6   <none>           <none>
+my-nginx-86bcf76b9f-cgp5f   1/1     Running   0          17s     10.244.2.23   ct7-6   <none>           <none>
+my-nginx-86bcf76b9f-j85m9   1/1     Running   0          17s     10.244.2.25   ct7-6   <none>           <none>

@@ -20,6 +20,13 @@ spec:
         image: nginx
         ports:
         - containerPort: 80
+        volumeMounts:
+          - name: timezone
+            mountPath: /etc/localtime                           # 挂载到容器的目录
+      volumes:
+         - name: timezone
+           hostPath: 
+             path: /usr/share/zoneinfo/Asia/Shanghai
 
 [root@ct7-5 k8s]# kubectl apply -f nginx.yml 
 deployment.apps/my-nginx created

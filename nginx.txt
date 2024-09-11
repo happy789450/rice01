@@ -1,4 +1,4 @@
-nginx定义403  要在 server里面加上 error_page  403 /403.html;
+# nginx定义403  要在 server里面加上 error_page  403 /403.html;
 nginx 将403 ip 返回在403界面 要在location里面加上
         location  /403.html {
                 default_type text/html;
@@ -29,6 +29,28 @@ http {
 http {
     gzip on;  # 开启gzip压缩
 }
+
+# 设置nginx status 在server里面
+location /status {
+  stub_status on;
+  allow 192.168.0.0/16;
+  deny all;
+}
+
+[root@ct7-5 conf]# curl 192.168.31.58/status
+Active connections: 1 
+server accepts handled requests
+ 7 7 34 
+Reading: 0 Writing: 1 Waiting: 0
+
+# nginx status详解
+Active connections – 活跃的连接数量
+server accepts handled requests — 总共处理了7个连接 , 成功创建7次握手, 总共处理了34个请求。
+# 注意，重启nginx 计数清0
+reading — 读取客户端的连接数。
+writing — 响应数据到客户端的数量。
+waiting — 开启 keep-alive 的情况下,这个值等于 active – (reading+writing), 意思就是 Nginx 已经处理完正在等候下一次请求指令的驻留连接。
+
 
 # 配置缓冲区大小： 
 http {

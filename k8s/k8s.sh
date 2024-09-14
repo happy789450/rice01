@@ -45,7 +45,7 @@ wget  https://gitee.com/rice01/linux/raw/master/cri-dockerd-0.3.4-3.el7.x86_64.r
 sudo rpm -ivh cri-dockerd-0.3.4-3.el7.x86_64.rpm
 # 重载系统守护进程
 
-sed -i 's/--container-runtime-endpoint fd:\/\//--network-plugin=cni --pod-infra-container-image=registry.aliyuncs.com\/google_containers\/pause:3.7/g'   /usr/lib/systemd/system/cri-docker.service
+sed -i 's/--container-runtime-endpoint fd:\/\//--network-plugin=cni --pod-infra-container-image=registry.aliyuncs.com\/google_containers\/pause:3.9/g'   /usr/lib/systemd/system/cri-docker.service
 
 sudo tee /etc/docker/daemon.json <<-'EOF'
 {
@@ -69,13 +69,13 @@ sudo systemctl start cri-docker.socket cri-docker
 sudo systemctl status docker cir-docker.socket cri-docker
 
 
-# 下载 runc.amd64  
-cd /srv/
-wget https://gitee.com/rice01/linux/raw/master/runc.amd64
-# 安装
-install -m 755 runc.amd64 /usr/local/bin/runc
-# 验证
-runc -v
+## 下载 runc.amd64  
+#cd /srv/
+#wget https://gitee.com/rice01/linux/raw/master/runc.amd64
+## 安装
+#install -m 755 runc.amd64 /usr/local/bin/runc
+## 验证
+#runc -v
 
 
 ## 添加yum源 版本1.31

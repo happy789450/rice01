@@ -1,7 +1,7 @@
 #!/bin/bash
 
 hostname=$(hostname)
-node_ip=$(ifconfig |awk 'NR==2{print $2}')
+node_ip=$(ifconfig | egrep -A 1 "ens33:|eth0:" | grep inet | awk '{print $2}')
 
 #关闭防火墙
 systemctl stop firewalld 

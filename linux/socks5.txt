@@ -8,14 +8,13 @@ yum install -y shadowsocks-libev
 
 vim /etc/shadowsocks-libev/config.json
 {
-  "local_address":"127.0.0.1",
-  "local_port":1080,
-  "port_password":{
-  "8600":"abc@123"
-  },
-  "timeput":300,
-  "method":"aes-256-gcm",
-  "fast_open":false
+"server": "8.210.86.144",
+"server_port": 1209,
+"local_port": 1080,
+"password": "zhou@123",
+"method": "aes-256-gcm",
+"mode": "tcp_and_udp",
+"timeout": 600
 }
 
 systemctl enable --now shadowsocks-libev-local

@@ -9,7 +9,7 @@ nginx 将403 ip 返回在403界面 要在location里面加上
 然后重载nginx即可
 
 
-ngixn 优化
+## ngixn 优化
 1.屏蔽nginx版本号
 在http 字段添加
 server_tokens off;
@@ -144,3 +144,11 @@ $body_bytes_sent：发送给客户端的字节数，不包括响应头的大小�
 $http_referer：referer URL。
 $http_user_agent：客户端浏览器信息。
 $http_x_forwarded_for：客户端的真实IP地址。
+
+# 统计负载均衡集群每台服务器访问次数
+add_header cluster_id $hostname;(增加头部信息,显示主机名,添加在nginx配置文件http下)
+
+for i in {1..100}
+  do
+    curl -si http://139.9.101.176/  | grep -P "cluster_id"   #cluster_id是集群主机的名字
+  done  | sort | uniq -c

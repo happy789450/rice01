@@ -1,5 +1,5 @@
 #!/bin/bash
-# 以下指令适用于 Kubernetes 1.31。
+# 以下指令适用于 Kubernetes 1.28.2。
 hostname=$(hostname)
 master_ip=$(ifconfig | egrep -A 1 "ens33:|eth0:" | grep inet | awk '{print $2}')
 

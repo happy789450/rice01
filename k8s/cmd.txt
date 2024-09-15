@@ -114,3 +114,11 @@ my-nginx-86bcf76b9f-8gkqd   1/1     Running   0          17s     10.244.2.22   c
 my-nginx-86bcf76b9f-c9k9c   1/1     Running   0          17s     10.244.2.24   ct7-6   <none>           <none>
 my-nginx-86bcf76b9f-cgp5f   1/1     Running   0          17s     10.244.2.23   ct7-6   <none>           <none>
 my-nginx-86bcf76b9f-j85m9   1/1     Running   0          17s     10.244.2.25   ct7-6   <none>           <none>
+
+# k8s 重载nginx  方法一：
+# k8s 不进入容器执行命令 如 重载nginx # -- 后面就是要执行的命令
+nginx_pod_name=$(kubectl  get pods -o wide  | grep nginx | awk '{print $1}')
+for i in $nginx_pod_name
+  do
+    kubectl exec -it $i -- nginx -t && nginx -s reload 
+  done

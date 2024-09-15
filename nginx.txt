@@ -145,6 +145,9 @@ $http_referer：referer URL。
 $http_user_agent：客户端浏览器信息。
 $http_x_forwarded_for：客户端的真实IP地址。
 
+# 添加服务器ip头部信息（测试用）
+add_header X-Server-IP $server_addr;  #在 http 里面
+
 # 统计负载均衡集群每台服务器访问次数
 add_header cluster_id $hostname;(增加头部信息,显示主机名,添加在nginx配置文件http下)
 

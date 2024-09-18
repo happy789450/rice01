@@ -1,0 +1,33 @@
+# 自定义私有仓库 (test use)
+yum -y install docker-distribution  (服务端)
+systemctl start docker-distribution
+systemctl enable docker-disstribution
+(客户端)
+#vim /etc/sysconfig/docker
+#INSECURE_REGISTRY='--insecure-registry (+仓库IP):5000' (允许非加密方式访问仓库)
+#ADD_REGISTRY='--add-registry (+仓库IP)'  (docker 仓库地址)
+#:wq 
+vim /etc/docker/daemon.json
+{
+        "registry-mirrors": ["https://registry.docker-cn.com","https://cyr1uljt.mirror.aliyuncs.com"],
+        "insecure-registries": ["154.12.19.195:5000","registry-1.docker.io:5000"]
+}
+
+systemctl restart  docker 
+
+# 上传镜像到仓库
+1.打标签 
+docker tag docker.io/busybox:latest  192.168.1.31:5000/docker.io/busybox:latest
+2.上传
+docker push 192.168.1.31:5000/docker.io/busybox:latest
+
+# 查看私有镜像仓库的镜像名称 
+curl  http://仓库IP:5000/v2/_catalog
+
+# pull 镜像
+docker pull 154.12.19.195:5000/docker.io/busybox
+
+docker run -itd  154.12.19.195:5000/docker.io/busybox
+
+docker exec -it 154.12.19.195:5000/docker.io/busybox
+

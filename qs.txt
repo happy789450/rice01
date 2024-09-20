@@ -58,3 +58,11 @@ TCP协议是一种面向连接的、可靠的、基于字节流的运输层通�
 通过状态码判断是否正常 通过日志信息来定位问题
 2.可以使用网络测速工具  网站 来判断域名访问是否正常提供服务
 3.可以使用抓包工具来判断从客户端到服务器是否有问题  tcpdump traceroute等
+
+# EDNS
+参考连接 
+https://blog.csdn.net/ZhipingXi/article/details/77553307
+
+# Linux cgroup详解（理论与实例）
+参考连接
+https://blog.csdn.net/lisemi/article/details/94021498

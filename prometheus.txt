@@ -1,61 +1,58 @@
-centos7 安装普罗米修斯监控  prometheus
-环境准备 2台服务器
+# centos7 安装普罗米修斯监控  prometheus
+# 环境准备 2台服务器
 1. 192.168.3.28   master
 2. 192.168.3.26   node
-可以将信息同步到/etc/hosts
+# 可以将信息同步到/etc/hosts
 
-注意服务器时间同步 
-关闭防火墙
+# 注意服务器时间同步 
+# 关闭防火墙
 
-在master  下载安装包  官网有编译好的 直接用就可以
+# 在master  下载安装包  官网有编译好的 直接用就可以
 cd /srv/
 wget  https://github.com/prometheus/prometheus/releases/download/v2.37.0/prometheus-2.37.0.linux-amd64.tar.gz
 tar -xf  prometheus-2.37.0.linux-amd64.tar.gz
 mv prometheus-2.37.0.linux-amd64  /usr/local/prometheus
 
-使用默认配置文件可以直接启动访问
+# 使用默认配置文件可以直接启动访问
 /usr/local/prometheus/prometheus --config.file="/usr/local/prometheus/prometheus.yml" &
-默认端口号是9090 可以用ss 查看端口号是否起了没有
+# 默认端口号是9090 可以用ss 查看端口号是否起了没有
 
 
-#node 服务器安装 node_exporter
+# node 服务器安装 node_exporter
 cd /srv/
 wget https://github.com/prometheus/node_exporter/releases/download/v1.3.1/node_exporter-1.3.1.linux-amd64.tar.gz
 tar -xf  node_exporter-1.3.1.linux-amd64.tar.gz
 mv node_exporter-1.3.1.linux-amd64  /usr/local/node_exporter
 
-启动
+# 启动
 nohup /usr/local/node_exporter/node_exporter &
-默认端口号是 9100
+# 默认端口号是 9100
 ss -utnlp | grep 9100
-#使用nohup 命令 启动 关闭终端时  进程不会关闭
+# 使用nohup 命令 启动 关闭终端时  进程不会关闭
 
-#在主配置文件最后面 添加node信息
+# 在主配置文件最后面 添加node信息
 vim /usr/local/prometheus/prometheus.yml
   - job_name: "node"
     static_configs:
       - targets: ["192.168.3.26:9100"]
 
-杀死主进程
+# 杀死主进程
 pkill prometheus
-然后查看进程不再了  就可以启动了
+# 然后查看进程不再了  就可以启动了
 ps -ef | grep prometheus | grep -v grep 
 
-#使用grafana图形界面
+# 使用grafana图形界面
 master 服务器操作
-1.添加yum源
+# 1.添加yum源
 vim /etc/yum.repos.d/grafana.repo
 [grafana]
 name=grafana
-baseurl=https://packages.grafana.com/enterprise/rpm
-repo_gpgcheck=1
+baseurl=https://mirrors.aliyun.com/grafana/yum/rpm
+repo_gpgcheck=0
 enabled=1
-gpgcheck=1
-gpgkey=https://packages.grafana.com/gpg.key
-sslverify=1
-sslcacert=/etc/pki/tls/certs/ca-bundle.crt
+gpgcheck=0
 
-2. 安装 启动
+# 2. 安装 启动
 yum -y install grafana-enterprise
 
 systemctl start grafana-server

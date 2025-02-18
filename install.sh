@@ -92,11 +92,13 @@ function install_php8(){
   cp /srv/php-8.2.6/php.ini-production   /usr/local/php8/etc/php.ini 
   sed -i  '18a pid = run/php-fpm.pid'  /usr/local/php8/etc/php-fpm.conf
   sed -i '942c date.timezone = Asia/Shanghai' /usr/local/php8/etc/php.ini
-  sed -i '385c max_execution_time = 300' /usr/local/php8/etc/php.ini
-  sed -i '674c post_max_size = 32M'  /usr/local/php8/etc/php.ini
-  sed -i '395c max_input_time = 300' /usr/local/php8/etc/php.ini
+  sed -i 's/max_execution_time = 30/max_execution_time = 300/g' /usr/local/php8/etc/php.ini
+  sed -i 's/post_max_size = 8M/post_max_size = 32M/g'  /usr/local/php8/etc/php.ini
+  sed -i 's/max_input_time = 60/max_input_time = 300/g' /usr/local/php8/etc/php.ini
+  sed -i 's/;extension=gd/extension=gd/g' /usr/local/php8/etc/php.ini
 
 ##编译GD库 cd /srv/php-8.2.6/ext/gd ##   ./configure --with-php-config=/usr/local/php8/bin/php-config --with-jpeg --with-freetype ##  make && make install 
+  cd /srv/php-8.2.6/ext/gd  && /usr/local/php8/bin/phpize . &&  ./configure --with-php-config=/usr/local/php8/bin/php-config --with-jpeg --with-freetype  &&  make && make install 
 
   cp /root/rice01/systemctl/php-fpm.service /usr/lib/systemd/system/php-fpm.service
   systemctl daemon-reload 

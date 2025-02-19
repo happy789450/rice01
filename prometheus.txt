@@ -93,3 +93,44 @@ systemctl enable grafana-server
 
 grafana 仪表盘官网下载，然后去页面导入
 https://grafana.com/grafana/dashboards/
+
+# 安装alertmanager(如果需要则安装)
+cd /srv
+wget https://github.com/prometheus/alertmanager/releases/download/v0.24.0/alertmanager-0.24.0.linux-amd64.tar.gz
+tar -zxvf alertmanager-0.24.0.linux-amd64.tar.gz
+mv alertmanager-0.24.0.linux-amd64 /usr/local/alertmanager
+
+vim /usr/lib/systemd/system/alertmanager.service
+[Unit]
+Description=https://prometheus.io
+[Service]
+Restart=on-failure
+ExecStart=/usr/local/alertmanager/alertmanager --config.file=/usr/local/alertmanager/alertmanager.yml --storage.path=/usr/local/alertmanager/data/
+[Install]
+WantedBy=multi-user.target
+
+systemctl daemon-reload
+systemctl start alertmanager
+systemctl enable alertmanager
+systemctl status alertmanager
+netstat -tnlp|grep :9093
+
+# 安装dingtalk(如果需要)
+cd /srv/
+wget https://github.com/timonwong/prometheus-webhook-dingtalk/releases/download/v2.1.0/prometheus-webhook-dingtalk-2.1.0.linux-amd64.tar.gz
+tar -zxvf prometheus-webhook-dingtalk-2.1.0.linux-amd64.tar.gz
+mv prometheus-webhook-dingtalk-2.1.0.linux-amd64 /usr/local/webhook_dingtalk
+ 
+cat >/usr/lib/systemd/system/webhook-dingtalk.service <<EOF
+[Unit]
+Description=webhook-dingtalk
+[Service]
+Restart=on-failure
+ExecStart=/usr/local/webhook_dingtalk/prometheus-webhook-dingtalk --config.file=/usr/local/webhook_dingtalk/dingtalk.yml --web.listen-address=:8060
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl enable webhook_dingtalk
+systemctl start webhook_dingtalk
+systemctl status webhook_dingtalk

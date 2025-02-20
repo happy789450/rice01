@@ -1,7 +1,7 @@
 # CentOS 7 安装 ELK (Elasticsearch, Logstash, Kibana) 的步骤如下：
 # 安装Java：
 # ELK stack依赖Java，所以首先安装Java。
-sudo yum install java-1.8.0-openjdk
+sudo yum -y install java-1.8.0-openjdk
 
 # 安装Elasticsearch：
 sudo rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch
@@ -28,7 +28,7 @@ enabled=1
 autorefresh=1
 type=rpm-md' | sudo tee /etc/yum.repos.d/kibana.repo
  
-sudo yum install kibana
+sudo yum -y install kibana
 sudo systemctl start kibana
 sudo systemctl enable kibana
 
@@ -42,9 +42,10 @@ enabled=1
 autorefresh=1
 type=rpm-md' | sudo tee /etc/yum.repos.d/logstash.repo
  
-yum install logstash
+yum -y install logstash
 systemctl start logstash
 systemctl enable logstash
+systemctl status logstash
 
 # 安装filebeat
 yum -y install filebeat
@@ -81,7 +82,8 @@ systemctl restart elasticsearch
 # 修改kibana配置文件
 vim /etc/kibana/kibana.yml
 server.host: 0.0.0.0
-elasticsearch.url: “http://192.168.31.186:9200”
+# elasticsearch.url: “http://192.168.31.186:9200”  ## 6.+用这个
+elasticsearch.hosts: ["http://192.168.1.108:9200"] ## 7.+用这个
 i18n.locale: "zh-CN"  #设置中文界面
 systemctl restart kibana
 # 浏览器里访问http://192.168.31.236:5601

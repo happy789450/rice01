@@ -35,5 +35,31 @@ systemctl restart kibana
 
 # 配置Logstash（如果需要）。
 # logstash端口号 9600
+cat /etc/logstash/conf.d/nginx_es.conf 
+input {
+  file {
+    path => "/usr/local/nginx/logs/access.log"
+    start_position => "beginning"
+  }
+}
+output {
+  elasticsearch {
+    hosts => ["192.168.1.108:9200"]
+    index => "nginx_access_es_%{+YYYY-MM-dd}"
+  }
+}
+input {
+  file {
+    path => "/usr/local/nginx/logs/error.log"
+    start_position => "beginning"
+  }
+}
+output {
+  elasticsearch {
+    hosts => ["192.168.1.108:9200"]
+    index => "nginx_error_es_%{+YYYY-MM-dd}"
+  }
+}
+systemctl restart logstash
 
 # 完成以上步骤后，Elasticsearch、Kibana和Logstash将被安装并启动。可以通过访问 http://<your-server-ip>:5601 来使用Kibana，并根据需要配置索引模式和仪表板。

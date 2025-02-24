@@ -105,6 +105,9 @@ systemctl enable kubelet
 #成功之后 执行kubeadm join 命令  命令参数 在master init之后会生成
 
 echo "请查看k8s.txt 把master scp /etc/kubernetes/admin.conf 192.168.255.141:/etc/kubernetes/ 拷贝到node节点 然后source"
+echo "export KUBECONFIG=/etc/kubernetes/admin.conf" >>  ~/.bash_profile
+# 加载
+source ~/.bash_profile
 
 #安装pod网络插件
 # kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml

@@ -18,6 +18,11 @@ local_ip=$(ifconfig | egrep -A 1 "ens33:|eth0:" | grep inet | awk '{print $2}')
 function install_vim(){
   yum -y install vim net-tools  wget  git bash-completion make bind-utils gcc m4 autoconf unzip zip lrzsz rsync telnet epel-release
   bash ./sh/change_ip.sh
+  curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo
+  cp /etc/localtime /etc/localtime-bak
+  rm -f /etc/localtime
+  ln -s /usr/share/zoneinfo/Asia/Shanghai  /etc/localtime 
+  date
 }
 
 

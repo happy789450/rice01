@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx
+spec:
+  selector:
+    matchLabels:
+      run: my-nginx
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        run: my-nginx
+    spec:
+      containers:
+      - name: my-nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+        volumeMounts:
+          - name: timezone
+            mountPath: /etc/localtime                           # 挂载到容器的目录
+      volumes:
+         - name: timezone
+           hostPath: 
+             path: /usr/share/zoneinfo/Asia/Shanghai

@@ -58,3 +58,11 @@ rsync   -av -e "ssh -p 22" xxx/   root@192.168.1.1:/tmp/xxx/
 tar -zcvf ./back/25/index.tar.gz -C/usr/local/nginx/html index.html
 # tar 解压到指定目录
 tar -xf xxx.tar.gz -C /xxx/xxx/
+
+# 修改history 长度，显示日期，过滤无效命令
+vim /etc/profile
+export HISTSIZE=5000
+export HISTTIMEFORMAT="%Y-%m-%d %H:%M:%S "
+export HISTIGNORE="ls:pwd"
+
+source /etc/profile

@@ -28,7 +28,7 @@ spec:
            hostPath: 
              path: /usr/share/zoneinfo/Asia/Shanghai
 
-[root@ct7-5 k8s]# kubectl apply -f nginx.yml 
+[root@ct7-5 k8s]# kubectl apply -f my_nginx.yml 
 deployment.apps/my-nginx created
 [root@ct7-5 k8s]# kubectl get deploy
 NAME       READY   UP-TO-DATE   AVAILABLE   AGE
@@ -59,7 +59,7 @@ spec:
   selector:
     run: my-nginx
 
-[root@ct7-5 k8s]# kubectl apply -f service.yml 
+[root@ct7-5 k8s]# kubectl apply -f my_service.yml 
 service/my-nginx created
 [root@ct7-5 k8s]# kubectl get service
 NAME         TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE

@@ -10,9 +10,9 @@ DNS1=8.8.8.8
 DNS2=114.114.114.114
 NETMASK=255.255.255.0
 GATEWAY=$gateway
-EOF 
+EOF
 
-sed -i 's/DHCP/static/g' $file 
+sed -i 's/dhcp/static/g' $file 
 
 systemctl restart network
 

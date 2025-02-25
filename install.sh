@@ -9,7 +9,7 @@ read -p "请选择要做的事
 6，一键安装nginx,mysql,php,zabbix			15,安装openresty+openstar
 7, 安装redis						16,安装prometheus & grafana
 8, 安装zabbix-agent					17,安装mongodb4.4
-9, 安装rabbitmq				
+9, 安装rabbitmq						18,安装mysql8
 0, 查看脚本说明
 请选择要做的事:" choice
 

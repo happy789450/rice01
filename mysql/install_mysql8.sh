@@ -11,10 +11,11 @@ sudo systemctl enable mysqld
 sudo grep 'temporary password' /var/log/mysqld.log
 tmp_pass=$(grep 'temporary password' /var/log/mysqld.log  | awk '{print $NF}' | tail -1)
 
-mysql -uroot -p$tmp_pass -e "ALTER USER 'root'@'localhost' IDENTIFIED BY 'MyNewPass123!';"
-mysql -uroot -pMyNewPass123! -e "SET GLOBAL validate_password.policy = 'LOW';"
-mysql -uroot -pMyNewPass123! -e "SET GLOBAL validate_password.length = 6;"
-mysql -uroot -pMyNewPass123! -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '123456';"
+yum -y install expect
+
+expect ./change_ps8.sh
+
+
 
 cat <<EOF >>/etc/my.cnf
 validate_password.policy=low

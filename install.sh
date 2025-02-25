@@ -8,7 +8,7 @@ read -p "请选择要做的事
 5, 安装zabbix						14,安装gitlab
 6，一键安装nginx,mysql,php,zabbix			15,安装openresty+openstar
 7, 安装redis						16,安装prometheus & grafana
-8, 安装zabbix-agent
+8, 安装zabbix-agent					17,安装mongodb4.4
 9, 安装rabbitmq				
 0, 查看脚本说明
 请选择要做的事:" choice
@@ -16,9 +16,9 @@ read -p "请选择要做的事
 local_ip=$(ifconfig | egrep -A 1 "ens33:|eth0:" | grep inet | awk '{print $2}')
 
 function install_vim(){
+  curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo
   yum -y install vim net-tools  wget  git bash-completion make bind-utils gcc m4 autoconf unzip zip lrzsz rsync telnet epel-release
   bash ./sh/change_ip.sh
-  curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo
   cp /etc/localtime /etc/localtime-bak
   rm -f /etc/localtime
   ln -s /usr/share/zoneinfo/Asia/Shanghai  /etc/localtime 
@@ -277,6 +277,10 @@ function install_openresty_openstar(){
 
 }
 
+function install_mongodb(){
+	bash ./sh/mongodb.sh
+}
+
 function readme(){
   echo "本脚本尽量只执行一次，如果失败可以自行调整，少数服务可以多次执行无影响
         脚本有待完善
@@ -288,6 +292,7 @@ function readme(){
 	
 
 }
+
 
 
 if   [ "$choice" = 1 ]; then
@@ -324,6 +329,8 @@ elif [ "$choice" = 14 ];then
   install_gitlab
 elif [ "$choice" = 15 ];then
   install_openresty_openstar
+elif [ "$choice" = 17 ];then
+  install_mongodb
 elif [ "$choice" = 0 ];then
   readme
 else

@@ -281,6 +281,10 @@ function install_mongodb(){
 	bash ./sh/mongodb.sh
 }
 
+function install_mysql8(){
+	bash ./mysql/install_mysql8.sh
+}
+
 function readme(){
   echo "本脚本尽量只执行一次，如果失败可以自行调整，少数服务可以多次执行无影响
         脚本有待完善
@@ -331,6 +335,8 @@ elif [ "$choice" = 15 ];then
   install_openresty_openstar
 elif [ "$choice" = 17 ];then
   install_mongodb
+elif [ "$choice" = 18 ];then
+  install_mysql8
 elif [ "$choice" = 0 ];then
   readme
 else

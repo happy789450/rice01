@@ -4,7 +4,7 @@ cd /srv
 wget https://dev.mysql.com/get/mysql80-community-release-el7-3.noarch.rpm
 sudo yum localinstall mysql80-community-release-el7-3.noarch.rpm
 
-sudo yum install mysql-community-server --nogpgcheck
+sudo yum install -y mysql-community-server --nogpgcheck
 sudo systemctl start mysqld
 sudo systemctl enable mysqld
 
@@ -13,7 +13,7 @@ tmp_pass=$(grep 'temporary password' /var/log/mysqld.log  | awk '{print $NF}' | 
 
 yum -y install expect
 
-expect ./change_ps8.sh
+expect ./mysql/change_ps8.sh
 
 
 

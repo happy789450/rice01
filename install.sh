@@ -13,7 +13,7 @@ read -p "请选择要做的事
 0, 查看脚本说明
 请选择要做的事:" choice
 
-local_ip=$(ifconfig | egrep -A 1 "ens33:|eth0:" | grep inet | awk '{print $2}')
+export local_ip=$(ifconfig | egrep -A 1 "ens33:|eth0:" | grep inet | awk '{print $2}')
 
 function install_vim(){
   curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo

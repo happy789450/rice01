@@ -1,0 +1,24 @@
+# 安装 Metrics Server
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+
+# 查看 Metrics Server Pod
+kubectl get pods -n kube-system | grep metrics-server
+
+# 查看 Metrics Server 服务
+kubectl get apiservices | grep metrics.k8s.io
+
+# 修改 Metrics Server 的启动参数
+# 编辑 Metrics Server 的 Deployment，添加以下参数：
+kubectl edit deployment metrics-server -n kube-system
+
+args:
+  - --kubelet-insecure-tls
+  - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
+# 保存退出后，metrics会自动生成一个新的pod
+
+# 使用 kubectl top 命令
+kubectl top nodes
+kubectl top pods
+
+# 如果命令返回节点和 Pod 的资源使用情况，说明 Metrics Server 已正常工作。
+

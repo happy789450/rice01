@@ -5,10 +5,11 @@ set timeout 30
 
 # 获取命令行参数
 #set username [lindex $argv 0]
-#set password [lindex $argv 1]
+# 接收命令行脚本传递的变量参数
+set password [lindex $argv 0]
 #set database [lindex $argv 2]
 set username root
-set password $tmp_pass
+#set password $tmp_pass
 set database "mysql"
 
 # 启动 MySQL 客户端

@@ -1,5 +1,5 @@
 #!/bin/bash
-
+sh_path=$(pwd)
 cd /srv
 wget https://dev.mysql.com/get/mysql80-community-release-el7-3.noarch.rpm
 sudo yum localinstall mysql80-community-release-el7-3.noarch.rpm
@@ -12,8 +12,8 @@ sudo grep 'temporary password' /var/log/mysqld.log
 tmp_pass=$(grep 'temporary password' /var/log/mysqld.log  | awk '{print $NF}' | tail -1)
 
 yum -y install expect
-
-expect ./mysql/change_ps8.sh
+cd $sh_path
+expect ./change_ps8.sh $tmp_pass
 
 
 

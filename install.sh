@@ -10,7 +10,7 @@ read -p "请选择要做的事
 7, 安装redis						16,安装prometheus & grafana
 8, 安装zabbix-agent					17,安装mongodb4.4
 9, 安装rabbitmq						18,安装mysql8
-0, 查看脚本说明
+0, 查看脚本说明						19,安装node_exporter
 请选择要做的事:" choice
 
 export local_ip=$(ifconfig | egrep -A 1 "ens33:|eth0:" | grep inet | awk '{print $2}')
@@ -285,6 +285,11 @@ function install_mysql8(){
 	bash ./mysql/install_mysql8.sh
 }
 
+function install_node_exporter(){
+	bash ./prometheus/node.sh
+}
+
+
 function readme(){
   echo "本脚本尽量只执行一次，如果失败可以自行调整，少数服务可以多次执行无影响
         脚本有待完善
@@ -337,6 +342,8 @@ elif [ "$choice" = 17 ];then
   install_mongodb
 elif [ "$choice" = 18 ];then
   install_mysql8
+elif [ "$choice" = 19 ];then
+  install_node_exporter
 elif [ "$choice" = 0 ];then
   readme
 else

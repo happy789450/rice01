@@ -41,6 +41,7 @@ function install_nginx(){
   mkdir /usr/local/nginx/conf/conf.d/
   /usr/local/nginx/sbin/nginx
   echo "/usr/local/nginx/sbin/nginx" >> /etc/rc.d/rc.local
+  chmod +x /etc/rc.d/rc.local
   ps -ef |grep nginx
   echo "nginx 已启动,并设置开机自起到 /etc/rc.d/rc.local"
 }

@@ -1,0 +1,5 @@
+# 添加仓库
+helm repo add zabbix-chart-6.0  https://cdn.zabbix.com/zabbix/integrations/kubernetes-helm/6.0
+
+# 查看helm 仓库
+helm repo list

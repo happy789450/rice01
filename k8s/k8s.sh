@@ -111,19 +111,23 @@ systemctl enable kubelet
 kube_version=$(kubeadm version | awk -F '[: ]' '{print $9}'  | tr -d '",')
 
 #初始化k8s集群
-echo " 初始化命令
+echo " 初始化命令"
+echo "
 kubeadm init \
 --apiserver-advertise-address=$master_ip \
 --cri-socket=unix:///var/run/cri-dockerd.sock \
 --image-repository registry.aliyuncs.com/google_containers \
 --kubernetes-version $kube_version \
 --service-cidr=10.1.0.0/16 \
---pod-network-cidr=10.244.0.0/16 "
+--pod-network-cidr=10.244.0.0/16 " | bash 
 
 #配置kubectl 工具
 mkdir -p $HOME/.kube
 cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 chown $(id -u):$(id -g) $HOME/.kube/config
 
-#安装pod网络插件
-# kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+## 安装pod网络插件
+## kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+# 安装calico
+# kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+kubectl apply -f ./yml/calico.yaml

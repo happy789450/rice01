@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
       - name: my-nginx
-        image: nginx
+        image: my-nginx-1
+        imagePullPolicy: IfNotPresent   #如果本地存在镜像，则使用本地镜像；否则从远程仓库拉取
         ports:
         - containerPort: 80
         volumeMounts:

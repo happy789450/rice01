@@ -1,0 +1,21 @@
+# zabbix 自定义监控项
+vim zabbix_agentd.conf
+Include=/usr/local/zabbix/etc/zabbix_agentd.conf.d/*.conf
+UnsafeUserParameters=1
+
+# free.conf就是一个例子,下面是参数说明
+
+UserParameter=custom.metric.name[*],/path/to/your/script.sh $1
+custom.metric.name 是监控项的名称（可以自定义）。
+
+[*] 表示可以传递参数（可选）。
+
+/path/to/your/script.sh 是自定义脚本的路径。
+
+$1 是传递给脚本的参数（可选）。
+
+# server服务器执行
+zabbix_get -s 127.0.0.1 -k "custom.metric.name"
+
+# 测试数据正常之后去web页面添加模板，监控项，触发器，图形
+# 页面显示数据后，要更新告警里面的触发器动作。

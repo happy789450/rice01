@@ -1,0 +1,40 @@
+# https://blog.csdn.net/weixin_44187730/article/details/129958012
+# https://www.cnblogs.com/lrzy/p/17358169.html
+
+yum install -y zlib.x86_64 zlib-devel.x86_64
+# Install the repository RPM:
+sudo yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+# Install PostgreSQL:
+sudo yum install -y postgresql15-server
+# 初始化数据库
+/usr/pgsql-15/bin/postgresql-15-setup initdb
+#  设置数据库开机自动启动后启动数据库
+systemctl enable postgresql-15
+systemctl start    postgresql-15
+
+# 创建数据库
+# 切换用户
+su postgres
+psql
+# 执行创建
+create database test_db -U postgres ;
+# 设置密码(自由发挥):postgres
+alter user postgres with password 'postgres';
+
+#远程 编辑
+vim /var/lib/pgsql/15/data/postgresql.conf
+修改参数:
+listen_addresses = '*'
+# 编辑配置
+vim /var/lib/pgsql/15/data/pg_hba.conf
+# 添加内容
+host    all             all              0.0.0.0/0              md5
+#重启
+sudo systemctl restart postgresql-15
+
+# 格式
+psql -h 主机IP -p 端口  -U 用户名 -W -d 数据库
+# 示例
+psql -h 127.0.0.1 -p 5432  -U postgres -d test_db;
+
+# \l 查看数据库

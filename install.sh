@@ -146,6 +146,7 @@ EOF
   systemctl start zabbix-server && systemctl status zabbix-server
   systemctl start zabbix-agent && systemctl status zabbix-agent
   cp /root/rice01/conf/zabbix.conf  /usr/local/nginx/conf/conf.d/
+  ln -s  /usr/local/zabbix/bin/zabbix_get  /usr/local/bin/zabbix_get
 else
   install_zabbix
 fi

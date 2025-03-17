@@ -1,0 +1,10 @@
+#启动服务：docker-compose up
+#后台启动服务：docker-compose up -d
+#停止服务：docker-compose down
+#查看日志：docker-compose logs
+#构建镜像：docker-compose build
+#重启服务：docker-compose restart
+
+docker-compose -f /path/to/my-compose.yml up -d
+
+docker-compose -f my-compose.yml down #stop

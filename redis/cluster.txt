@@ -1,0 +1,17 @@
+# 修改配置文件 redis.conf
+# 注释bind ip 或者添加机器ip
+# 关闭保护模式
+protected-mode no
+# 开启集群配置
+cluster-enabled yes
+# 添加redis密码（可选）
+
+# 创建集群
+redis-cli --cluster create --cluster-replicas 1 192.168.0.201:6379  192.168.0.202:6379 192.168.0.206:6379  192.168.0.201:6379  192.168.0.202:6379 192.168.0.206:6379 192.168.0.201:6379  192.168.0.202:6379 192.168.0.206:6379
+
+# 进入redis  查看集群信息
+[root@ct7-1 bin]# redis-cli -h 192.168.0.201
+192.168.0.201:6379> cluster nodes
+d9fb981780fce66feca6de776f9a189b7cac0a30 192.168.0.202:6379@16379 master - 0 1742318673631 2 connected 4096-8191
+24c78f579684df6d8a8fdfc209987e7a3d2bef01 192.168.0.201:6379@16379 myself,master - 0 1742318673000 1 connected 0-4095 12288-16383
+dfd70f46abc3b9fba76a83ea9ce40459c4021f10 192.168.0.206:6379@16379 master - 0 1742318674703 3 connected 8192-12287

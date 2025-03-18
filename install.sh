@@ -14,6 +14,8 @@ read -p "请选择要做的事
 请选择要做的事:" choice
 
 export local_ip=$(ifconfig | egrep -A 1 "ens33:|eth0:" | grep inet | awk '{print $2}')
+export shell_path=~/rice01/
+
 
 function install_vim(){
   curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo
@@ -174,8 +176,7 @@ function install_redis(){
     make MALLOC=libc
     make install PREFIX=/usr/local/redis
     cp /srv/redis-5.0.6/redis.conf  /usr/local/redis/bin/
-    wget http://www.rice666.com:8888/systemctl/redis.service
-    cp redis.service /usr/lib/systemd/system/redis.service
+    cp  $shell_path/systemctl/redis.service /usr/lib/systemd/system/redis.service
     sed -i '136c  daemonize yes'  /usr/local/redis/bin/redis.conf
     ln -s /usr/local/redis/bin/redis-cli /usr/bin/redis-cli
     systemctl daemon-reload

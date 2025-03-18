@@ -1,0 +1,39 @@
+部署HAProxy服务器
+1）配置网络，安装软件
+[root@haproxy ~]# yum -y install haproxy
+2）修改配置文件
+[root@haproxy ~]# vim /etc/haproxy/haproxy.cfg
+global
+ log 127.0.0.1 local2   ##[err warning info debug]
+chroot /usr/local/haproxy
+pidfile /var/run/haproxy.pid ##haproxy的pid存放路径
+ maxconn 4000     ##最大连接数，默认4000
+ user haproxy
+ group haproxy
+ daemon       ##创建1个进程进入deamon模式运行
+defaults
+ mode http    ##默认的模式mode { tcp|http|health }
+option dontlognull  ##不记录健康检查的日志信息
+ option httpclose  ##每次请求完毕后主动关闭http通道
+ option httplog   ##日志类别http日志格式
+ option forwardfor  ##后端服务器可以从Http Header中获得客户端ip
+ option redispatch  ##serverid服务器挂掉后强制定向到其他健康服务器
+ timeout connect 10000 #如果backend没有指定，默认为10s
+ timeout client 300000 ##客户端连接超时
+ timeout server 300000 ##服务器连接超时
+ maxconn  3000  ##最大连接数
+ retries  3   ##3次连接失败就认为服务不可用，也可以通过后面设置
+listen stats 0.0.0.0:1080   #监听端口
+    stats refresh 30s   #统计页面自动刷新时间
+    stats uri /stats   #统计页面url
+    stats realm Haproxy Manager #进入管理解面查看状态信息
+    stats auth admin:admin  #统计页面用户名和密码设置
+listen  websrv-rewrite 0.0.0.0:80
+   balance roundrobin
+   server  web1 192.168.2.100:80 check inter 2000 rise 2 fall 5
+   server  web2 192.168.2.200:80 check inter 2000 rise 2 fall 5
+3）启动服务器并设置开机启动
+[root@haproxy ~]# systemctl start haproxy
+[root@haproxy ~]# systemctl enable haproxy
+# 步骤三：客户端验证
+# 客户端配置与HAProxy相同网络的IP地址，并使用火狐浏览器访问http://192.168.4.5，测试调度器是否正常工作，客户端访问http://192.168.4.5:1080/stats测试状态监控页面是否正常

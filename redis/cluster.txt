@@ -15,3 +15,12 @@ redis-cli --cluster create --cluster-replicas 1 192.168.0.201:6379  192.168.0.20
 d9fb981780fce66feca6de776f9a189b7cac0a30 192.168.0.202:6379@16379 master - 0 1742318673631 2 connected 4096-8191
 24c78f579684df6d8a8fdfc209987e7a3d2bef01 192.168.0.201:6379@16379 myself,master - 0 1742318673000 1 connected 0-4095 12288-16383
 dfd70f46abc3b9fba76a83ea9ce40459c4021f10 192.168.0.206:6379@16379 master - 0 1742318674703 3 connected 8192-12287
+
+# 加入集群
+redis-cli  --cluster add-node 192.168.0.203:6379 192.168.0.201:6379 --cluster-slave --cluster-master-id 24c78f579684df6d8a8fdfc209987e7a3d2bef01
+
+# slave 表示要添加从节点
+# cluster-master-id 要添加到哪一个主节点，id是*****
+# 192.168.0.203:6379 要添加的从节点
+# 192.168.0.201:6379 原集群中任意节点
+# 进入redis 用info 命令可以查看详细信息

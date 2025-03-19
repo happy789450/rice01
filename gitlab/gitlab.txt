@@ -1,0 +1,29 @@
+vim /etc/gitlab/gitlab.rb
+
+#访问地址设置
+external_url 'http://主机地址:82'
+#访问端口设置
+nginx['listen_port'] = 82
+
+#默认8080，如果系统8080已使用，需要设置未占用的，不然报错
+puma['port'] = 8082          # 修改 Puma 端口
+#缓冲大小
+postgresql['shared_buffers'] = "256MB"
+#连接数
+postgresql['max_connections'] = 200
+
+# 重载配置文件 ，每次修改配置文件后，需要执行
+gitlab-ctl reconfigure 
+
+# 启动gitlab
+gitlab-ctl start
+# 重启gitlab
+gitlab-ctl restart
+# 停止gitlab
+gitlab-ctl stop
+# 查看gitlab日志
+gitlab-ctl tail
+
+# 查看root 默认密码
+cat /etc/gitlab/initial_root_password
+# 登陆后点头像修改

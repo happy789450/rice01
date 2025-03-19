@@ -19,6 +19,7 @@ export shell_path=~/rice01/
 d_redis="wget  http://download.redis.io/releases/redis-5.0.6.tar.gz"
 d_nginx="wget https://nginx.org/download/nginx-1.16.1.tar.gz"
 d_php="wget https://www.php.net/distributions/php-8.2.6.tar.gz"
+d_java="wget https://download.oracle.com/java/21/latest/jdk-21_linux-aarch64_bin.rpm"
 
 function have_f (){
 if [ -f /srv/$1 ] ;then
@@ -230,9 +231,8 @@ function install_jenkins(){
     wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
     rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
     yum -y install jenkins  
-    wget https://download.oracle.com/java/17/latest/jdk-17_linux-x64_bin.rpm
-    rpm -ivh jdk-17_linux-x64_bin.rpm
-    
+    have_f "jdk-21_linux-x64_bin.rpm" "$d_java"
+    rpm -ivh jdk-21_linux-x64_bin.rpm 
     systemctl start jenkins && systemctl enable jenkins &&systemctl status jenkins
     wget https://raw.githubusercontent.com/happy789450/rice01/main/conf/jenkins.conf
     echo "推荐使用java17以上版本，不然可能起不来。默认端口号8080,可以通过nginx代理访问"

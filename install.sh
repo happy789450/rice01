@@ -16,6 +16,21 @@ read -p "请选择要做的事
 export local_ip=$(ifconfig | egrep -A 1 "ens33:|eth0:" | grep inet | awk '{print $2}')
 export shell_path=~/rice01/
 
+d_redis="wget  http://download.redis.io/releases/redis-5.0.6.tar.gz"
+d_nginx="wget https://nginx.org/download/nginx-1.16.1.tar.gz"
+d_php="wget https://www.php.net/distributions/php-8.2.6.tar.gz"
+
+function have_f (){
+if [ -f /srv/$1 ] ;then
+  echo "文件存在，无需下载"
+else
+  echo "文件不存在，下载文件"
+  cd /srv/
+  $2
+fi
+}
+
+
 
 function install_vim(){
   curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo
@@ -30,8 +45,7 @@ function install_vim(){
 
 function install_nginx(){
   yum -y install pcre pcre-devel openssl-devel openssl gcc gcc-c++
-  cd /srv/
-  wget https://nginx.org/download/nginx-1.16.1.tar.gz
+  have_f "nginx-1.16.1.tar.gz" "$d_nginx"
   useradd -s /sbin/nologin -M nginx
   tar -xf nginx-1.16.1.tar.gz
   cd /srv/nginx-1.16.1
@@ -87,8 +101,9 @@ fi
 
 function install_php8(){
   yum install -y gcc gcc-c++  make zlib zlib-devel pcre pcre-devel  libjpeg libjpeg-devel libpng libpng-devel freetype freetype-devel libxml2 libxml2-devel glibc glibc-devel glib2 glib2-devel bzip2 bzip2-devel ncurses ncurses-devel curl curl-devel e2fsprogs e2fsprogs-devel krb5 krb5-devel openssl openssl-devel openldap openldap-devel nss_ldap openldap-clients openldap-servers libxslt libxslt-devel oniguruma oniguruma-devel sqlite-devel 
-  cd /srv
-  wget https://www.php.net/distributions/php-8.2.6.tar.gz
+  have_f "php-8.2.6.tar.gz" "$d_php"
+  #cd /srv
+  #wget https://www.php.net/distributions/php-8.2.6.tar.gz
   tar -xf php-8.2.6.tar.gz
   cd php-8.2.6/
   ./configure --prefix=/usr/local/php8 --with-config-file-path=/usr/local/php8/etc --with-curl --with-mhash --with-gd --with-gettext --with-iconv-dir --with-kerberos --with-ldap --with-libdir=lib64 --with-libxml-dir --with-openssl --with-pcre-regex --with-pdo-sqlite --with-pear --with-xmlrpc --with-xsl --with-zlib --enable-fpm --enable-ldap --enable-bcmath --enable-libxml --enable-inline-optimization --enable-mbregex --enable-mbstring --enable-opcache --enable-pcntl --enable-shmop --enable-soap --enable-sockets --enable-sysvmsg --enable-sysvsem --enable-sysvshm --enable-xml --enable-zip --enable-static --enable-mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-freetype-dir --with-jpeg-dir --with-png-dir --disable-debug
@@ -169,8 +184,7 @@ function install_zabbix_agent(){
 }
 
 function install_redis(){
-    cd /srv/
-    wget   http://download.redis.io/releases/redis-5.0.6.tar.gz
+    have_f "redis-5.0.6.tar.gz" "$d_redis"
     tar -xf redis-5.0.6.tar.gz
     cd redis-5.0.6
     make MALLOC=libc
@@ -180,7 +194,7 @@ function install_redis(){
     sed -i '136c  daemonize yes'  /usr/local/redis/bin/redis.conf
     ln -s /usr/local/redis/bin/redis-cli /usr/bin/redis-cli
     systemctl daemon-reload
-    systemctl start redis.service && systemctl status redis
+    systemctl start redis.service && systemctl status redis && systemctl enable redis 
 }
 
 function install_rabbitmq(){

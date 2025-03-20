@@ -18,3 +18,14 @@ Build Name and Description Setter
 在构建环境里选择设置 Set Build Name
 eg:
 第#${BUILD_NUMBER} 次$param 操作，版本号是 $BUILD_NUMBER  $back_version
+
+
+## 执行shell 参考
+```
+#!/bin/bash
+cd web
+sudo git pull
+cd ..
+echo "$ver $choise $ver"
+bash -x jenkins_deploy_roll.sh $ver $choise $ver 
+```

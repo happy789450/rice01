@@ -1,0 +1,9 @@
+# 实现推送代码及发布
+# gitlab操作
+# 1.设置，网络，Outbound requests  ，勾选2个 允许系统钩子向本地发出请求
+2.项目，设置，集成，添加jenkins，勾选push，添加 url，添加 projectname，username，pass，然后test，通过之后save
+
+# jenkins 操作
+项目里面配置， triggers 勾选 build when a change 这里的url 添加到gitlab集成里面
+
+

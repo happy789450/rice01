@@ -63,3 +63,6 @@ output {
 systemctl restart logstash
 
 # 完成以上步骤后，Elasticsearch、Kibana和Logstash将被安装并启动。可以通过访问 http://<your-server-ip>:5601 来使用Kibana，并根据需要配置索引模式和仪表板。
+# kibana 添加索引， 点击左上角头像，点管理空间，左边列表选择索引模式，右上角创建索引
+# (需要提前用logstash 将日志传送到es，才会在这里看到能创建的索引)
+# 创建好了之后点击左上角三横，点击discover，即可看到相关索引的日志

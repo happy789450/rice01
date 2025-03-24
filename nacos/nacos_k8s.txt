@@ -1,0 +1,19 @@
+# 已经有k8s集群且有3个node
+# 使用此方式快速启动,请注意这是没有使用持久化卷的,可能存在数据丢失风险:
+git clone https://github.com/nacos-group/nacos-k8s.git
+cd nacos-k8s
+# 启动之前先修改service yaml文件
+vim deploy/nacos/nacos-quick-start.yaml
+  type: NodePort
+  #type: ClusterIP
+  #clusterIP: None
+
+chmod +x quick-startup.sh
+./quick-startup.sh
+# 脚本启动后 nacos pod  还是起不来，因为少个表
+# 连接数据库导入即可, 丢失的表是 config_info_gray
+kubectl  exec -it mysql-vfwgn -- mysql -u root -proot -D nacos_devtest <nacos.sql 
+# nacos.sql 地址
+https://github.com/alibaba/nacos/blob/master/distribution/conf/mysql-schema.sql?spm=5238cd80.2ef5001f.0.0.3f613b7cNVmPEa&file=mysql-schema.sql
+# 页面访问
+http://${cluster-ip}:8848/nacos/

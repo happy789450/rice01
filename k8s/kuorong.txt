@@ -1,0 +1,49 @@
+# Kubernetes Pod 自动扩容机制
+# 1. Horizontal Pod Autoscaler (HPA) - 水平 Pod 自动扩缩
+# HPA 是最常用的自动扩容方式，它根据 CPU、内存使用率或其他自定义指标自动增加或减少 Pod 副本数量。
+# 基本工作原理：
+# 定期检查指标（默认每15秒）
+# 将当前指标值与目标值比较
+# 计算需要的 Pod 数量
+# 调整 Deployment/ReplicaSet 的副本数
+ 
+# 需要提前安装好 metrics-server
+kubectl apply -f yml/nginx_hpa.yml
+# 执行hpa命令
+kubectl autoscale deploy nginx-deploy  --cpu-percent=20  --min=2  --max=10
+kubectl apply -f yml/ng-svc-hpa.yml
+
+# 压测
+yum -y install httpd
+ab -n 1000000 -c 800 http://192.168.0.203:31105/
+
+# 多开几个终端观察
+watch -n 1 kubectl get hpa
+watch -n 1 kubectl top pods
+watch -n 1 kubectl get pods -o wide
+
+# 当压测结束后要过几分钟，pod会恢复到2个
+# 查看hpa的信息
+kubectl describe hpa
+ 
+ 
+# 2. Vertical Pod Autoscaler (VPA) - 垂直 Pod 自动扩缩
+# VPA 自动调整 Pod 的 CPU 和内存请求/限制，而不是改变 Pod 数量。
+# VPA 特点：
+# 自动设置 Pod 的资源请求
+# 可以减少资源浪费
+# 需要删除并重新创建 Pod 才能应用更改
+ 
+ 
+ 
+ 
+ 
+ 
+# 3. Cluster Autoscaler - 集群节点自动扩缩
+# 当 Pod 因资源不足无法调度时，自动增加集群节点；当节点利用率低时，自动减少节点。
+# 最佳实践
+# 合理设置指标阈值：CPU 通常设为 50-70%，内存根据应用特点设置
+# 设置合理的 min/max 副本数：避免过度扩展或收缩
+# 考虑应用启动时间：对于启动慢的应用，增加稳定窗口时间
+# 结合自定义指标：如 QPS、队列长度等业务指标
+# 测试扩容行为：确保自动扩容不会导致应用异常

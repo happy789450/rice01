@@ -8,6 +8,7 @@
 # 调整 Deployment/ReplicaSet 的副本数
  
 # 需要提前安装好 metrics-server
+# HPA 需要 Pod 设置了 resources.requests 才能计算 CPU 利用率 yaml文件里面需要定义这个
 kubectl apply -f yml/nginx_hpa.yml
 # 执行hpa命令
 kubectl autoscale deploy nginx-deploy  --cpu-percent=20  --min=2  --max=10
@@ -19,6 +20,7 @@ ab -n 1000000 -c 800 http://192.168.0.203:31105/
 
 # 多开几个终端观察
 watch -n 1 kubectl get hpa
+watch -n 1 kubectl get deployment
 watch -n 1 kubectl top pods
 watch -n 1 kubectl get pods -o wide
 

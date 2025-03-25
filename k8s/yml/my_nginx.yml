@@ -16,6 +16,13 @@ spec:
       - name: my-nginx
         image: my-nginx-1
         imagePullPolicy: IfNotPresent   #如果本地存在镜像，则使用本地镜像；否则从远程仓库拉取
+        resources:
+          limits:
+            cpu: 200m
+            memory: 128Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
         ports:
         - containerPort: 80
         volumeMounts:

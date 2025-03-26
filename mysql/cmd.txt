@@ -3,5 +3,10 @@
 DROP USER IF EXISTS 'root'@'%';
 -- 重新创建并限制权限
 CREATE USER 'root'@'%' IDENTIFIED BY 'StrongPassword123!';
+-- 授予 root@% 对所有数据库的全部权限（危险，仅限测试环境）
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
+-- 仅授予 root@% 对 mydb 数据库的权限（生产环境推荐）
+GRANT ALL PRIVILEGES ON mydb.* TO 'root'@'%';
 GRANT SELECT, INSERT, UPDATE ON *.* TO 'root'@'%';  -- 仅授予必要权限
 FLUSH PRIVILEGES;
+

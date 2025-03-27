@@ -3,3 +3,16 @@ export JAVA_HOME=/usr/local/java/jdk-11.0.1/
 export PATH=$JAVA_HOME/bin:$PATH
 
 
+# 打一个jar包 运行 web 访问 显示hello world！
+git clone https://github.com/ChenXbFrank/springboot-hello-world
+sudo yum install maven
+mvn clean package
+# 第一次打包时间会有点长, 打包好了后在这里
+ls target/springboot-helloworld-0.0.1-SNAPSHOT.jar
+# 输出文本修改
+cat src/main/java/com/cxb/springboot/controller/UserController.java
+# 启动
+java -jar target/springboot-helloworld-0.0.1-SNAPSHOT.jar
+# web 访问 http://192.168.0.201:8090/hello
+
+

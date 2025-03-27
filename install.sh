@@ -11,6 +11,7 @@ read -p "请选择要做的事
 8, 安装zabbix-agent					17,安装mongodb4.4
 9, 安装rabbitmq						18,安装mysql8
 0, 查看脚本说明						19,安装node_exporter
+21,安装java21
 请选择要做的事:" choice
 
 export local_ip=$(ifconfig | egrep -A 1 "ens33:|eth0:" | grep inet | awk '{print $2}')
@@ -19,7 +20,7 @@ export shell_path=~/rice01/
 d_redis="wget  http://download.redis.io/releases/redis-5.0.6.tar.gz"
 d_nginx="wget https://nginx.org/download/nginx-1.16.1.tar.gz"
 d_php="wget https://www.php.net/distributions/php-8.2.6.tar.gz"
-d_java="wget https://download.oracle.com/java/21/latest/jdk-21_linux-aarch64_bin.rpm"
+d_java="wget https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.rpm"
 
 function have_f (){
 if [ -f /srv/$1 ] ;then
@@ -231,8 +232,7 @@ function install_jenkins(){
     wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
     rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
     yum -y install jenkins  
-    have_f "jdk-21_linux-x64_bin.rpm" "$d_java"
-    rpm -ivh jdk-21_linux-x64_bin.rpm 
+    install_java21
     systemctl start jenkins && systemctl enable jenkins &&systemctl status jenkins
     wget https://raw.githubusercontent.com/happy789450/rice01/main/conf/jenkins.conf
     echo "推荐使用java17以上版本，不然可能起不来。默认端口号8080,可以通过nginx代理访问"
@@ -292,6 +292,12 @@ function install_openresty_openstar(){
     echo "已经安装openresty 和 openstar 但是并未启动"
     
 
+}
+
+function install_java21(){
+    cd /srv/
+    have_f "jdk-21_linux-x64_bin.rpm" "$d_java"
+    rpm -ivh jdk-21_linux-x64_bin.rpm
 }
 
 function install_mongodb(){
@@ -361,9 +367,10 @@ elif [ "$choice" = 18 ];then
   install_mysql8
 elif [ "$choice" = 19 ];then
   install_node_exporter
+elif [ "$choice" = 21 ];then
+  install_java21
 elif [ "$choice" = 0 ];then
   readme
 else
   echo "请重新输入" 
 fi
-

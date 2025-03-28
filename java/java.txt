@@ -15,4 +15,6 @@ cat src/main/java/com/cxb/springboot/controller/UserController.java
 java -jar target/springboot-helloworld-0.0.1-SNAPSHOT.jar
 # web 访问 http://192.168.0.201:8090/hello
 
-
+# 将jar包打包到容器
+docker build -t hello-java dockerfile .
+docker images | grep hello-java

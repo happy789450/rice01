@@ -23,7 +23,7 @@ sudo ctr task start my-nginx
 查看容器任务：
 sudo ctr tasks list
 进入容器：
-sudo ctr tasks exec --exec-id my-exec my-nginx sh
+sudo ctr tasks exec -t --exec-id my-exec my-nginx bash
 停止容器：
 sudo ctr task kill my-nginx
 删除容器：

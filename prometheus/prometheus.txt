@@ -71,21 +71,7 @@ ps -ef | grep prometheus | grep -v grep
 
 # 使用grafana图形界面
 master 服务器操作
-# 1.添加yum源
-vim /etc/yum.repos.d/grafana.repo
-[grafana]
-name=grafana
-baseurl=https://mirrors.aliyun.com/grafana/yum/rpm
-repo_gpgcheck=0
-enabled=1
-gpgcheck=0
-
-# 2. 安装 启动
-yum -y install grafana-enterprise
-
-systemctl start grafana-server
-systemctl enable grafana-server
-
+# 执行grafana.sh 安装
 默认端口号3000
 默认的用户名:admin 密码:admin 第一次登陆后提示修改密码
 设置—>Data sources—>Add data sources

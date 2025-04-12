@@ -1,0 +1,106 @@
+1. 确保 Prometheus 能收集脚本输出的指标
+Prometheus 默认是 拉取（pull） 模式，但脚本通常是 一次性执行 的，无法持续暴露 HTTP 接口。因此，推荐使用 Pushgateway 作为中间层存储临时指标。
+
+(1) 安装和配置 Pushgateway
+下载 Pushgateway：
+
+bash
+复制
+wget https://github.com/prometheus/pushgateway/releases/download/v1.6.2/pushgateway-1.6.2.linux-amd64.tar.gz
+tar xvf pushgateway-*.tar.gz
+./pushgateway &  # 启动 Pushgateway（默认端口 9091）
+配置 Prometheus 抓取 Pushgateway：
+在 prometheus.yml 中添加：
+
+yaml
+复制
+scrape_configs:
+  - job_name: 'pushgateway'
+    honor_labels: true  # 保留脚本推送的标签
+    static_configs:
+      - targets: ['localhost:9091']
+重启 Prometheus：
+
+bash
+复制
+systemctl restart prometheus
+2. 修改脚本，将结果推送到 Pushgateway
+脚本执行后，通过 curl 将结果推送到 Pushgateway。
+
+示例脚本 (/path/to/your_script.sh)：
+bash
+复制
+#!/bin/bash
+
+# 模拟脚本输出一个指标值
+METRIC_VALUE=$(date +%s)  # 替换为你的实际逻辑
+
+# 推送到 Pushgateway
+cat <<EOF | curl --data-binary @- http://localhost:9091/metrics/job/my_script/instance/example
+# TYPE my_script_result gauge
+my_script_result $METRIC_VALUE
+EOF
+关键参数：
+
+job/my_script: 任务名称（自定义）。
+
+instance/example: 实例标识（自定义）。
+
+my_script_result: 指标名称（自定义）。
+
+TYPE ... gauge: 指定指标类型（gauge/counter）。
+
+测试推送
+运行脚本后，检查 Pushgateway 是否收到数据：
+
+bash
+复制
+curl http://localhost:9091/metrics | grep my_script_result
+或在 Prometheus 的 Web 界面（http://<prometheus-ip>:9090）查询 my_script_result。
+
+3. 在 Grafana 中创建图表
+添加 Prometheus 数据源：
+
+进入 Grafana → Configuration → Data Sources → 选择 Prometheus。
+
+填写 Prometheus 地址（如 http://localhost:9090）。
+
+创建 Dashboard 和面板：
+
+点击 Create → Dashboard → Add new panel。
+
+在查询编辑器中选择 Prometheus 数据源，输入：
+
+promql
+复制
+my_script_result
+根据需要调整图表类型（如 Time series 或 Stat）。
+
+优化显示：
+
+如果数据点稀疏，可在面板设置中启用 Points 显示。
+
+添加标题、单位等描述信息。
+
+4. 自动化脚本执行和推送
+为了让数据持续更新，可以通过 Cron 定时任务 定期执行脚本：
+
+bash
+复制
+# 编辑 crontab
+crontab -e
+
+# 添加以下行（例如每分钟执行一次）
+* * * * * /path/to/your_script.sh
+注意事项
+数据保留：
+Pushgateway 默认永久保存数据，如需清理旧数据，可调用：
+
+bash
+复制
+curl -X DELETE http://localhost:9091/metrics/job/my_script
+指标设计：
+
+对于频繁更新的指标，建议直接使用 Prometheus 的 node_exporter 或自定义 Exporter。
+
+避免推送大量数据到 Pushgateway（适合低频、临时性任务）。

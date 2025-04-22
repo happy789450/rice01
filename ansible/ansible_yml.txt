@@ -28,6 +28,23 @@
      
 #     - name:  "用shell执行yum安装"
 #       shell: yum -y install sl net-tools  wget
+
+#     - name:  安装 pip
+#       yum:
+#         name: python2-pip-8.1.2-14.el7.noarch
+#         state: latest
+#     - name: 通过 pip安装 pexpect
+#       pip:
+#         name: pexpect
+#         extra_args: "-i https://mirrors.aliyun.com/pypi/simple/"
+#         state: present
+#     - name:  "ali yum"
+#       shell: curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo
       
+#      - name: cp脚本到目标服务器
+#        copy:
+#          src: /root/rice01/install.sh
+#          dest: /tmp/install.sh
+#          mode: '0755'
 #      - name: "执行交互试脚本"
-#        shell: echo "1" | bash /root/git/rice01/fast.sh
+#        shell: echo "1" | /tmp/install.sh

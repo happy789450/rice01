@@ -1,0 +1,138 @@
+centos7 安装rabbitmq 集群
+在 CentOS 7 上安装 RabbitMQ 集群需要以下步骤。这里假设你已经安装了 RabbitMQ 单节点，现在要扩展为集群。
+
+1. 准备工作
+1.1 确保所有节点满足条件
+主机名解析：确保所有节点的主机名可以互相解析（/etc/hosts 或 DNS）。
+
+bash
+sudo vi /etc/hosts
+添加类似内容：
+
+192.168.0.101 rabbitmq-node1
+192.168.0.102 rabbitmq-node2
+192.168.0.103 rabbitmq-node3
+Erlang Cookie 同步：所有节点的 ~/.erlang.cookie 必须相同。
+
+bash
+# 在主节点上查看 cookie
+cat /var/lib/rabbitmq/.erlang.cookie
+# 在其他节点上修改为相同的值
+sudo vi /var/lib/rabbitmq/.erlang.cookie
+# 修改后重启 RabbitMQ
+sudo systemctl restart rabbitmq-server
+⚠️ 注意：/var/lib/rabbitmq/.erlang.cookie 权限必须为 400：
+
+bash
+sudo chmod 400 /var/lib/rabbitmq/.erlang.cookie
+2. 安装 RabbitMQ
+2.1 安装 Erlang
+RabbitMQ 依赖 Erlang，建议安装官方仓库提供的版本：
+
+bash
+# 添加 Erlang 仓库
+sudo yum install -y epel-release
+sudo yum install -y erlang
+2.2 安装 RabbitMQ
+bash
+# 添加 RabbitMQ 仓库
+sudo yum install -y https://github.com/rabbitmq/rabbitmq-server/releases/download/v3.12.0/rabbitmq-server-3.12.0-1.el7.noarch.rpm
+# 安装
+sudo yum install -y rabbitmq-server
+# 启动并设置开机自启
+sudo systemctl start rabbitmq-server
+sudo systemctl enable rabbitmq-server
+2.3 启用管理插件
+bash
+sudo rabbitmq-plugins enable rabbitmq_management
+访问管理界面：
+
+http://<your-server-ip>:15672
+默认用户：guest / guest（仅限本地访问）。
+
+3. 配置 RabbitMQ 集群
+3.1 停止 RabbitMQ 并加入集群
+在 从节点（node2、node3） 上执行：
+
+bash
+# 停止 RabbitMQ
+sudo systemctl stop rabbitmq-server
+# 加入集群（以 node1 为主节点）
+sudo rabbitmqctl join_cluster rabbit@rabbitmq-node1
+# 启动 RabbitMQ
+sudo systemctl start rabbitmq-server
+3.2 验证集群状态
+在任意节点运行：
+
+bash
+sudo rabbitmqctl cluster_status
+输出应显示所有节点：
+
+bash
+Cluster status of node rabbit@rabbitmq-node1 ...
+[{nodes,[{disc,[rabbit@rabbitmq-node1,rabbit@rabbitmq-node2,rabbit@rabbitmq-node3]}]},
+{running_nodes,[rabbit@rabbitmq-node1,rabbit@rabbitmq-node2,rabbit@rabbitmq-node3]},
+{cluster_name,<<"rabbit@rabbitmq-node1">>},
+...]
+3.3 设置镜像队列（可选）
+如果希望队列在所有节点上镜像（高可用）：
+
+bash
+sudo rabbitmqctl set_policy ha-all "^" '{"ha-mode":"all"}'
+这会将所有队列 (^) 设置为在所有节点上镜像。
+
+4. 防火墙配置
+如果启用了防火墙，确保开放相关端口：
+
+bash
+sudo firewall-cmd --permanent --add-port={4369/tcp,25672/tcp,5671-5672/tcp,15672/tcp}
+sudo firewall-cmd --reload
+4369：Erlang 端口映射。
+
+25672：集群通信端口。
+
+5672：AMQP 端口。
+
+15672：管理界面端口。
+
+5. 测试集群
+管理界面：访问 http://<node-ip>:15672，在 Nodes 标签页查看所有节点。
+
+创建队列：在任一节点创建队列，其他节点应同步显示。
+
+6. 常见问题
+6.1 节点无法加入集群
+检查 hosts 文件是否正确。
+
+确保 .erlang.cookie 相同。
+
+检查防火墙是否阻止通信。
+
+6.2 管理界面无法访问
+确保 rabbitmq_management 插件已启用：
+
+bash
+sudo rabbitmq-plugins list
+检查端口是否开放：
+
+bash
+sudo netstat -tulnp | grep 15672
+6.3 节点状态不一致
+重启 RabbitMQ：
+
+bash
+sudo systemctl restart rabbitmq-server
+重新加入集群：
+
+bash
+sudo rabbitmqctl stop_app
+sudo rabbitmqctl join_cluster rabbit@rabbitmq-node1
+sudo rabbitmqctl start_app
+总结
+所有节点必须能互相解析主机名。
+
+.erlang.cookie 必须一致。
+
+集群配置完成后，队列默认不镜像，需手动设置策略。
+
+这样，你就成功在 CentOS 7 上搭建了 RabbitMQ 集群

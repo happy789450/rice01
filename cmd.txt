@@ -63,6 +63,6 @@ tar -xf xxx.tar.gz -C /xxx/xxx/
 vim /etc/profile
 export HISTSIZE=5000
 export HISTTIMEFORMAT="%Y-%m-%d %H:%M:%S "
-export HISTIGNORE="ls:pwd"
+export HISTIGNORE="ls:pwd:ll"
 
 source /etc/profile

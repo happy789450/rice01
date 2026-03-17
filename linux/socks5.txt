@@ -6,6 +6,11 @@ yum install -y shadowsocks-libev
 
 # 安装完成后，会有 ss-local命令测试
 
+# ubuntu用 sudo vim /etc/shadowsocks-libev/local.json
+# 使用模板服务启动客户端
+# sudo systemctl start shadowsocks-libev-local@local
+# sudo systemctl enable shadowsocks-libev-local@local
+
 cat > /etc/shadowsocks-libev/config.json <<EOF
 {
 "server": "8.210.86.144",
